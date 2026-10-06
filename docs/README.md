@@ -5,7 +5,7 @@
 
 [![Tests](https://img.shields.io/badge/tests-69%20passing-brightgreen)](./test)
 [![Solidity](https://img.shields.io/badge/solidity-0.8.20-blue)](./contracts)
-[![Mainnet](https://img.shields.io/badge/polygon-mainnet-8247e5)](https://polygonscan.com/address/0xbC102cDec0DD007E7739ac213b62d5B031B22aF1)
+[![Mainnet](https://img.shields.io/badge/polygon-mainnet-8247e5)](https://polygonscan.com/address/0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
 ---
@@ -101,12 +101,12 @@ C_allocated = min(C_kelly, C_stage) × quality_multiplier
 
 ## AIAgentRegistry — Polygon Mainnet
 
-**Address:** `0xbC102cDec0DD007E7739ac213b62d5B031B22aF1`
+**Address:** `0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E`
 
 Any protocol integrates in two lines:
 
 ```solidity
-IAgentRegistry registry = IAgentRegistry(0xbC102cDec0DD007E7739ac213b62d5B031B22aF1);
+IAgentRegistry registry = IAgentRegistry(0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E);
 require(registry.isEligible(agent), "Agent not eligible");
 ```
 
