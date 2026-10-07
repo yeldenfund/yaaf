@@ -160,7 +160,27 @@ All fees in USDC/USDT/MATIC. No native token.
 
 ## Live Data
 
-**Observatory:** 478 traders scored across GMX V2 and Hyperliquid. Updates every 6h.
+**Observatory:** 1,007 addresses examined across GMX V2 and Hyperliquid, 425 of them scored.
+Updates every 6h.
+
+| Venue | Examined | YAAF | MM | Below minimum | Data quality |
+|---|---|---|---|---|---|
+| Hyperliquid | 562 | 231 | 134 | 197 | medium |
+| GMX V2 | 445 | 60 | — | 385 | high |
+| **Total** | **1,007** | **291** | **134** | **582** | — |
+
+582 of 1,007 — 58%, and 87% on GMX V2 — fall below the 30-trade minimum and carry no score. The
+sample-size gate is doing its work: a score computed on twelve trades would be noise presented as a
+measurement. The two venue sets are disjoint; no address is scored twice.
+
+**Two scorers.** YAAF scores directional traders and scalpers (291 addresses), whose edge appears as
+discrete R-multiples on closed positions. MM Score scores market makers and hedgers (134), which hold
+permanent inventory and earn from rebate, spread and funding rather than from closed trades — nine
+components, weights summing to 1.00, bands INACTIVE through PRIME.
+
+They are **not comparable**. Both report on 0–1000, but YAAF is scale-free while MM Score carries an
+explicit size term (log₁₀ equity, capped at $100M) and applies neither DSR nor the CVaR penalty. An
+address is scored by one engine or the other, never both.
 
 **Live agents in production:**
 
@@ -223,7 +243,7 @@ python yelden_scorer_api.py
 
 | Phase | Timeline | Milestone |
 |---|---|---|
-| Foundation | ✅ Complete | YAAF v5 · AIAgentRegistry · Observatory (478 traders) |
+| Foundation | ✅ Complete | YAAF v5 · AIAgentRegistry · Observatory (1,007 addresses, 425 scored) |
 | cTrader Integration | Q4 2026 | cTrader API collector · Pepperstone + FTMO registered on-chain |
 | Multi-Agent Onboarding | Q1 2027 | 10+ agents registered · first external agents |
 | Genesis Scorer Program | Q1 2027 | 3–5 independent scorers · multi-scorer consensus |
