@@ -61,32 +61,35 @@ Volume Axiom as a fundamental gate, not a decorative constraint.
 | 10 | Pf Percentile | 0.12 | % of 1,000 random portfolios beaten |
 | 11 | Mc (Independence) | 0.07 | (1 − \|β\|)² × 100 |
 | — | CVaR penalty | − | min(CVaR/2, 1) × 15 |
-| — | Max DD penalty | − | MaxDD% × 0.25 |
+| — | Max DD penalty | − | MaxDD% × 0.20 |
 
-Weights are normalised to sum to 1.00 before being applied, so S_RAW is bounded in [0, 100].
+The weights above are the calibrated values of the Formal Specification. They sum to 0.96 and
+are divided by that sum before being applied, so S_RAW is bounded in [0, 100] while relative
+importance is preserved exactly (Amendment v5.0.1).
 
-Four components admit more than one reading; the protocol fixes them so any third party
-can reproduce a published score:
+Four components admit more than one reading; the Formal Specification fixes them so any third
+party can reproduce a published score:
 
-- **Pf Percentile** — the null model holds each trade's |P&L| fixed and draws its sign at
-  random with p=0.5, giving 1,000 no-skill portfolios with identical position sizing.
-  Reordering the agent's own trades would not serve: Profit Factor is permutation-invariant.
-- **Mc (Independence)** — β is the lag-1 autocorrelation of per-trade P&L, not a market beta.
-- **CVaR penalty** — normalised by the average *winning* trade: how many typical gains one
-  tail event destroys. Normalising by the average loss collapses it into a constant offset.
-- **SF** — the "last 8 S_RAW" are the last 8 scoring *rounds* over accumulated history, not
-  8 disjoint slices of it.
+- **Pf Percentile** — K = 1,000 vectors drawn from N(0, σ_r) with the same length as the agent's
+  R-multiple series. The component is the percentage of those random portfolios whose annualised
+  Sharpe the agent's real Sharpe exceeds.
+- **Mc (Independence)** — β is the correlation between the agent's daily aggregated R and the
+  daily returns of the underlying market. Own edge is rewarded; market beta is not.
+- **CVaR penalty** — expected shortfall of the R-multiple series at α = 0.95, loss side, taken
+  positive. Coherent and tail-sensitive (Rockafellar & Uryasev, 2000).
+- **SF** — the "last 8 S_RAW" are the eight most recent scoring *rounds*, carried in the agent's
+  persisted state. Each round contributes one EMA update.
 
-Scoring is deterministic: the Pf Percentile resampling is seeded from a SHA-256 digest of
-the trade record, so a score committed on-chain can be recomputed by anyone holding the
-same trades. See [`scorer/MIGRATION_v5.md`](./scorer/MIGRATION_v5.md).
+Scoring is deterministic: every random stream used by the Pf Percentile is seeded, so a score
+committed on-chain can be recomputed by anyone holding the same trades.
+See [`scorer/MIGRATION_v5.md`](./scorer/MIGRATION_v5.md).
 
 ### SISTEMA — Time-Compounding Score [0–1000]
 
 ```
 SISTEMA(t) = EMA(t) × CF(t) × SF(t)
 
-EMA(t) = 0.85 × EMA(t−1) + 0.15 × S_RAW × 10   # seeded from the first round's S_RAW × 10
+EMA(t) = 0.85 × EMA(t−1) + 0.15 × S_RAW × 10   # memory, EMA₀ = 300, one update per round
 CF     = min(√(trades/250), 1.0)                  # confidence, full at 250 trades
 SF     = min(mean(last 8 S_RAW)/45, 1) × (1 − σ_s/25)  # safety factor
 ```
@@ -181,10 +184,9 @@ yaaf/
 ├── test/
 │   └── AIAgentRegistry.test.js   # 69 tests passing
 ├── scorer/
-│   ├── yaaf_v5.py                # YAAF v5 scoring engine — 11 components
-│   ├── yelden_scorer_api.py      # Flask API — endpoints and data collection
-│   ├── compare.py                # Validation harness — v5.5 vs v5
+│   ├── yaaf_score_v5_formal.py   # Normative scoring engine — 11 components
 │   ├── MIGRATION_v5.md           # What changed in v5 and why
+│   ├── AMENDMENT_v5.0.1.md       # Weight normalisation amendment
 │   └── leaderboard.json          # Persistent agent leaderboard
 ├── observatory/
 │   └── README.md                 # Multi-chain agent census
