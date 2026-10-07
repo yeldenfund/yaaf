@@ -63,12 +63,30 @@ Volume Axiom as a fundamental gate, not a decorative constraint.
 | — | CVaR penalty | − | min(CVaR/2, 1) × 15 |
 | — | Max DD penalty | − | MaxDD% × 0.25 |
 
+Weights are normalised to sum to 1.00 before being applied, so S_RAW is bounded in [0, 100].
+
+Four components admit more than one reading; the protocol fixes them so any third party
+can reproduce a published score:
+
+- **Pf Percentile** — the null model holds each trade's |P&L| fixed and draws its sign at
+  random with p=0.5, giving 1,000 no-skill portfolios with identical position sizing.
+  Reordering the agent's own trades would not serve: Profit Factor is permutation-invariant.
+- **Mc (Independence)** — β is the lag-1 autocorrelation of per-trade P&L, not a market beta.
+- **CVaR penalty** — normalised by the average *winning* trade: how many typical gains one
+  tail event destroys. Normalising by the average loss collapses it into a constant offset.
+- **SF** — the "last 8 S_RAW" are the last 8 scoring *rounds* over accumulated history, not
+  8 disjoint slices of it.
+
+Scoring is deterministic: the Pf Percentile resampling is seeded from a SHA-256 digest of
+the trade record, so a score committed on-chain can be recomputed by anyone holding the
+same trades. See [`scorer/MIGRATION_v5.md`](./scorer/MIGRATION_v5.md).
+
 ### SISTEMA — Time-Compounding Score [0–1000]
 
 ```
 SISTEMA(t) = EMA(t) × CF(t) × SF(t)
 
-EMA(t) = 0.85 × EMA(t−1) + 0.15 × S_RAW × 10   # memory, initial = 300
+EMA(t) = 0.85 × EMA(t−1) + 0.15 × S_RAW × 10   # seeded from the first round's S_RAW × 10
 CF     = min(√(trades/250), 1.0)                  # confidence, full at 250 trades
 SF     = min(mean(last 8 S_RAW)/45, 1) × (1 − σ_s/25)  # safety factor
 ```
@@ -163,12 +181,16 @@ yaaf/
 ├── test/
 │   └── AIAgentRegistry.test.js   # 69 tests passing
 ├── scorer/
-│   ├── yelden_scorer_api.py      # YAAF v5 scoring engine (Flask)
+│   ├── yaaf_v5.py                # YAAF v5 scoring engine — 11 components
+│   ├── yelden_scorer_api.py      # Flask API — endpoints and data collection
+│   ├── compare.py                # Validation harness — v5.5 vs v5
+│   ├── MIGRATION_v5.md           # What changed in v5 and why
 │   └── leaderboard.json          # Persistent agent leaderboard
 ├── observatory/
 │   └── README.md                 # Multi-chain agent census
 ├── docs/
-│   └── Yelden_Whitepaper_v16.pdf
+│   ├── Yelden_Whitepaper_v16.pdf
+│   └── Yelden_Whitepaper_v16.docx
 ├── hardhat.config.js
 ├── package.json
 └── README.md
