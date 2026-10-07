@@ -1,0 +1,19 @@
+[Unit]
+Description=Yelden Scores API (scores.yelden.fund)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/aiagentregistry-observatory
+Environment=PYTHONPATH=/root/aiagentregistry-observatory
+Environment=SCORES_API_PORT=9200
+Environment=SCORES_API_BIND=127.0.0.1
+ExecStart=/usr/bin/python3 /root/aiagentregistry-observatory/scores_api.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/root/aiagentregistry-observatory/logs/scores-api.log
+StandardError=append:/root/aiagentregistry-observatory/logs/scores-api.log
+
+[Install]
+WantedBy=multi-user.target
