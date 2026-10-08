@@ -141,7 +141,10 @@ fix.
      The data for this is already on disk: `wallets_gmx.txt` carries the
      discovery PnL per address and the result JSON carries the per-agent table.
 
-   - **For Phase 2:** these 500 cannot be used at all. Half of them were
+   - **For Phase 2:** the form is validated and the universe is not. Asked as a
+     classification on this same data the score separates at AUC 0.827 in the
+     losing half and 0.632 pooled, which is the strongest result in this work and
+     the first one shaped like the thesis. But these 500 cannot be used at all. Half of them were
      selected for being the largest dollar losers in a window inside T2 — which
      is selection on the ruin outcome itself. No caveat repairs that; a gate test
      on this universe would be measuring its own construction. Phase 2 requires
@@ -311,14 +314,29 @@ skin in the game, the title is "Accountability", and four of the five problems i
 predictor. That is the part to rewrite.
 
 - Lead with accountability. The measured ρ is a diagnostic, not the product.
-- Remove **"2.5× more predictive than Sharpe"**. Win rate alone reaches +0.4066
-  against the composite's +0.2540: the score is out-predicted by one of its own
-  components, which retires the claim on its own terms.
+- Remove **"2.5× more predictive than Sharpe"**. It was never measured against
+  Sharpe under any protocol, which retires it on its own.
+
+  **Do not replace it with "win rate out-predicts the composite."** An earlier
+  draft of this plan said so, on the pooled figures (+0.4066 against +0.2540).
+  Within groups that comparison dissolves: win rate is +0.2666 and +0.2577 across
+  the two halves while the composite moves +0.03 to +0.46. Pooling inflates every
+  quantity that differs between the halves, and the composite is the one that does
+  not. The claim was confounded by the selection and is withdrawn.
+
+  What survives is narrower: in the half where the model has signal, inverse
+  volatility alone reaches +0.5624 against the composite's +0.4607, while
+  carrying a weight of 0.05 and being tracked by the composite at only +0.2503.
+  The model under-weights its best predictor in the regime where it works. That
+  belongs with the threshold re-derivation, not with Amendment v5.0.2.
 - Correct the GMX census: 445 addresses and 60 agents become **500 and 152**.
-- State what the two strongest signals actually are — win rate +0.4066 and the
-  max-drawdown penalty −0.3931. Consistency and ruin-avoidance. Both are
-  accountability, not return magnitude. The data has been arguing for the thesis
-  all along; the summary was arguing for something else.
+- State what the strongest signal actually is, and state it in the form that
+  produced it. Asked as a correlation the score is modest and heterogeneous.
+  Asked as a classification — does it separate agents whose forward R is positive
+  — it reaches **AUC 0.827** in the half where it has signal and **0.632** pooled,
+  on an outcome-selected universe. Consistency and ruin-avoidance, not return
+  magnitude. The data has been arguing for the thesis all along; the summary was
+  arguing for something else, and so was the statistic.
 - List the gate and the slash under *not proven* until Phase 2 returns.
 
 `scores.yelden.fund` already does this. The whitepaper and `yelden.fund` do not.
