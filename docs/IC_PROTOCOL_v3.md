@@ -79,9 +79,18 @@ protocol's own mechanism applies to.
 
 **Supplementary population, with the trigger and the size declared now, before
 the count is known:** if **fewer than 100** registry addresses pass the T1 floor,
-a supplement is drawn from GMX accounts having at least 30 trade actions strictly
-before the cut, **sampled at random with `seed = 20260820`**, to bring the
-measured total to **400**.
+a supplement is drawn from GMX accounts having at least 30 trade actions
+**within the 180 days immediately before the cut** — the same length requested
+for T1, so the activity criterion and the predictor window cover the same period
+— **sampled at random with `seed = 20260820`**, to bring the measured total to
+**400**.
+
+*The activity window was added 2026-10-08, after the first freeze
+(`f097adec`, blob `6e38d4ef`) and before any discovery ran. The frozen text said
+"strictly before the cut" with no window, which is unbounded; a script choosing
+the bound would have made the protocol's decision in code, which is the defect
+that `trades >= 5` and D9 both were. Amended before execution and re-frozen;
+nothing has been measured under either version.*
 
 Both numbers and the seed are fixed here because "widen it until there is enough"
 applied after seeing the count is a post-hoc decision dressed as a precaution.
