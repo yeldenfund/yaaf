@@ -313,3 +313,104 @@ often the condition would have triggered across this universe, and whether those
 agents went on to lose — and that is a statement about the rule's calibration,
 not about its effect. Either way it needs its own protocol, which must say which
 of the two it is measuring in its first sentence.
+
+---
+
+## Addendum — 2026-10-08, after enumerating the registry, before any measurement
+
+### The deployed gate cannot be measured
+
+`registry_v3.py` enumerated AIAgentRegistry v2 at
+`0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E` (11,826 bytes of bytecode, Polygon
+mainnet, block 95,195,183):
+
+| | |
+|---|---|
+| `totalAgents` | **2** |
+| `totalRegistered` | 2 |
+| `totalActive` | 2 |
+| status | ACTIVE, both |
+| registered | 2026-04-05, both, 58 minutes apart |
+| on-chain score ≥ 500 | **0** |
+| `isEligible` now | **0** |
+| `minStake` | 50 YLD |
+| `monthlyFee` | 1 YLD |
+
+The decoding was checked rather than trusted: for each agent the script computed
+`status == ACTIVE and score >= 500` from the decoded struct and compared it with
+the contract's own `isEligible`. Two agents, zero divergences.
+
+**n = 2.** The gate as deployed governs two addresses, and at the moment neither
+passes it. No statistic recovers a gate test from that, and no widening of the
+universe fixes it, because an address that never registered was never subject to
+the gate.
+
+### What this changes about the measurement
+
+This protocol's supplementary population was written as a power top-up — a way
+to add agents if the registry yielded too few. With n = 2 it is not a top-up; it
+is the entire study, and the study is therefore a different object than the one
+this document set out to measure. That substitution has to be stated rather than
+quietly inherited, because the two questions differ in what they can conclude.
+
+**The measurement that remains possible, and is worth running:**
+
+> Applied counterfactually to GMX accounts selected without looking at outcomes,
+> would a threshold of 500 on SISTEMA have separated agents that went on to lose
+> heavily from those that did not?
+
+That is a question about **the rule**, on the venue population. It is answerable,
+the data path is built, and the classification form already showed signal
+(AUC 0.827 and 0.632 on an outcome-selected universe; this would be the first run
+on an outcome-blind one).
+
+**It is not a question about the gate.** The result may not be reported as
+evidence that the gate works, that registered agents behave in any particular
+way, or that capital was protected. There is no capital behind the gate to
+protect: both registered agents sit below the threshold, so `isEligible` admits
+nobody today.
+
+Accordingly, for this measurement:
+
+- **Primary population:** GMX accounts with at least 30 trade actions in the 180
+  days before the cut, sampled at random with `seed = 20260820`, to **400**.
+- **The two registered agents are reported separately and never pooled.** Two
+  observations are a footnote, not a stratum.
+- Every published figure from this run carries the word **counterfactual** and
+  names the population as venue traders.
+
+### The adoption finding is the finding about the deployed system
+
+It is published alongside, not instead: the protocol has a live contract on
+Polygon mainnet with two registered agents, both below the eligibility
+threshold, scores last pushed 2026-10-07 and 2026-09-08. That is a statement
+about adoption rather than about the score, and it is more informative about the
+system's current state than any correlation in this body of work.
+
+### The slash question, closed without a log scan
+
+The log scan failed — the node caps `eth_getLogs` at 10,000 blocks and the
+fallback chunked at 500,000 — but it is no longer needed. `totalAgents` equals
+`totalRegistered` equals 2, so only two addresses have ever been registered, and
+each carries its own slash history in-struct: `warningCount`, `slashPending`, and
+a `status` that a SUSPENSION would have moved to PENDING and a BAN to BANNED.
+Both are ACTIVE. The contract's `totalSlashed` and `totalBurned` counters settle
+it globally in two calls.
+
+This document asserted the slash unmeasurable without checking. It is now
+checkable from the enumeration, and the assertion should stand or fall on those
+two counters rather than on an assumption.
+
+### Published figures that the contract contradicts
+
+Found while reading the source, and owed a correction on the public surfaces:
+
+| Published | In the contract |
+|---|---|
+| Gate at the VERIFIED band boundary | `SCORE_THRESHOLD_ACTIVE = 500`, mid-band |
+| Stake floors 50 / 200 / 500 / 1000 / 2000 USDC by band | a single `minStake`, 50 **YLD** — no tiering appears in the constants or in `minStake`; confirm by reading `registerAgent` before correcting the text |
+| `monthly_fee = 10 × (1000 − SISTEMA)/1000` USDC | `monthlyFee × (MAX_SCORE − score) / MAX_SCORE` with `monthlyFee = 1` **YLD** — same form, different unit and magnitude |
+
+The band-dependent stake floor is the one to check first. If the contract has no
+tiering, the whitepaper describes a mechanism that the deployed system does not
+implement, and that is a stronger claim to correct than a wrong constant.
