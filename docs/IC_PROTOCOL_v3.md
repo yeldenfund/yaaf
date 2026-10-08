@@ -64,8 +64,15 @@ Selection may use **only** information timestamped strictly before
 loss, drawdown, liquidations, volume or any other performance quantity, at any
 stage.
 
-**Primary population: every address in AIAgentRegistry v2**
-(`0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E`), taken whole.
+**Primary population: every address registered in AIAgentRegistry v2**
+(`0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E`) **with `registeredAt` strictly
+before the cut**, taken whole.
+
+The registration cutoff is not a performance filter and does not compromise
+outcome-blindness. It is required for the question to be well posed: an agent
+registered after 2026-08-20 had no gate decision to make at the cut, so there is
+nothing about it for a gate test to evaluate. `registeredAt` comes from the
+`AgentRegistered` event, which carries a timestamp.
 
 This is the population the gate actually governs — registered agents are who
 stake and who would be slashed. It is outcome-blind by construction, because
@@ -169,12 +176,29 @@ because four definitions are on the table and they will not agree.
 
 ## The gate
 
-**Threshold: SISTEMA ≥ 400** — the VERIFIED boundary, the first band carrying a
-stake floor that means anything.
+**Threshold: SISTEMA ≥ 500**, read from the deployed contract and not from the
+documentation.
+
+*Corrected 2026-10-08, before any discovery ran.* An earlier version of this
+document declared 400, the VERIFIED band boundary from the published band table.
+`contracts/AIAgentRegistry.sol` declares
+`uint256 public constant SCORE_THRESHOLD_ACTIVE = 500`. **The contract's gate is
+500 and no band boundary corresponds to it** — the bands are <200, <400, <600,
+<800, ≥800, so 500 sits in the middle of VERIFIED. The published table therefore
+implies the gate falls on a band edge and it does not. The gate that exists is
+the one in the contract, so that is the one measured; 400 and 600 are reported as
+secondary thresholds because the documentation uses them.
+
+Which predicate encodes the gate — `isEligible(address)` or `isActive(address)`,
+both present in the contract — is read from the source and named here before the
+run, not chosen after.
 
 On SISTEMA, not on S_RAW. The two are not interchangeable: `SISTEMA = EMA × CF × SF`,
-and S_RAW 40 maps to SISTEMA 400 only in the limit of a converged EMA with CF and
+and S_RAW 50 maps to SISTEMA 500 only in the limit of a converged EMA with CF and
 SF at 1. The cut tables in v2's addendum were on S_RAW and are descriptive only.
+The contract's `INITIAL_SCORE = 300` matches the framework's `EMA_INITIAL`, and
+its `MAX_SCORE = 1000` matches SISTEMA's range, so the two scales do correspond;
+only the threshold was mis-stated.
 
 **Scorer: patched.** This measurement runs on the scorer after Amendment v5.0.2
 D1 + D2 + D3, and only after the acceptance test returns S_RAW = 100.0000 exactly
@@ -274,9 +298,18 @@ that could not return it would not be worth running.
 
 ## What this protocol does not measure
 
-**The slash.** It has never fired, so there is no outcome. What could be measured
-is counterfactual — how often the condition would have triggered across this
-universe, and whether those agents went on to lose — and that is a statement about
-the rule's calibration, not about its effect. It is out of scope here and needs its
-own protocol, which must say which of the two it is measuring in its first
-sentence.
+**The slash.** It is implemented — `slashAgent`, `SlashLevel`, and an
+`AgentSlashed` event carrying `burned`, `remainingStake` and `reason`, with
+`WARNING_SLASH_PCT = 10` and `SUSPENSION_SLASH_PCT = 50`. Whether it has ever
+fired is therefore a question about the chain, not an assumption: a scan of
+`AgentSlashed` logs answers it. **That scan is a precondition of calling the
+slash unmeasurable**, and this document asserted it unmeasurable without running
+it. If the event fired even a handful of times there is outcome data, and a
+separate protocol is owed. Until the scan runs, the slash is out of scope for
+lack of a measurement, not for lack of events.
+
+If the scan finds no events, what remains measurable is counterfactual — how
+often the condition would have triggered across this universe, and whether those
+agents went on to lose — and that is a statement about the rule's calibration,
+not about its effect. Either way it needs its own protocol, which must say which
+of the two it is measuring in its first sentence.
