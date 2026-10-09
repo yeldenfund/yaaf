@@ -1,0 +1,795 @@
+{
+  "component_dispersion": {
+    "components": {
+      "cf": {
+        "distinct": 47,
+        "inert": false,
+        "max": 1.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "cvar_pen": {
+        "distinct": 146,
+        "inert": false,
+        "max": 15.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "dd_penalty": {
+        "distinct": 350,
+        "inert": false,
+        "max": 641.740874,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_avg_r": {
+        "distinct": 98,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_expectancy": {
+        "distinct": 80,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_mc": {
+        "distinct": 1,
+        "inert": true,
+        "max": 50.0,
+        "min": 50.0,
+        "n": 363
+      },
+      "s_min_usdc": {
+        "distinct": 3,
+        "inert": false,
+        "max": 500.0,
+        "min": 50.0,
+        "n": 302
+      },
+      "s_pf": {
+        "distinct": 85,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_pf_pct": {
+        "distinct": 270,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_raw": {
+        "distinct": 136,
+        "inert": false,
+        "max": 63.581973,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_sharpe": {
+        "distinct": 161,
+        "inert": false,
+        "max": 99.678547,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_smoothness": {
+        "distinct": 2,
+        "inert": false,
+        "max": 25.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_sortino": {
+        "distinct": 115,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_stability": {
+        "distinct": 328,
+        "inert": false,
+        "max": 99.953472,
+        "min": 25.0,
+        "n": 363
+      },
+      "s_vol": {
+        "distinct": 122,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 363
+      },
+      "s_winrate": {
+        "distinct": 346,
+        "inert": false,
+        "max": 89.189189,
+        "min": 0.0,
+        "n": 363
+      },
+      "sf": {
+        "distinct": 120,
+        "inert": false,
+        "max": 1.0,
+        "min": 0.0,
+        "n": 363
+      }
+    },
+    "inert_components": [
+      "s_mc"
+    ],
+    "inert_weight": 0.0,
+    "note": "inert means max == min across the served population: the component carries weight and ranks nobody. Weight is matched by stripping the s_ prefix, so components whose weight key differs are reported with weight 0 and should be read from scorer.components.",
+    "profiles": [
+      "directional",
+      "gmx",
+      "scalper"
+    ],
+    "scored_addresses_examined": 363
+  },
+  "contract": {
+    "INITIAL_SCORE": 300,
+    "MAX_SCORE": 1000,
+    "SCORE_THRESHOLD_ACTIVE": 500,
+    "SUSPENSION_SLASH_PCT": 50,
+    "WARNING_SLASH_PCT": 10,
+    "address": "0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E",
+    "isEligible_is_a_conjunction": true,
+    "onchain": {
+      "address": "0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E",
+      "minStake": 50000000000000000000,
+      "monthlyFee": 1000000000000000000,
+      "read_at": "2026-10-09T03:33:49.883659+00:00",
+      "rpc": "https://polygon-bor-rpc.publicnode.com",
+      "totalActive": 2,
+      "totalAgents": 2,
+      "totalBurned": 0,
+      "totalRegistered": 2,
+      "totalSlashed": 0
+    },
+    "source": {
+      "blob": "f3bcc9d7fce3029079631bfdc41bdc6f6d2e62e7",
+      "commit": "dba5f7ee3d46d104b12a9a61c502eaf3e0107a27",
+      "commit_date": "2026-10-06 16:42:39 -0400",
+      "path": "contracts/AIAgentRegistry.sol",
+      "sha256": "2357dc6ecb435a0315e1f9b4872a5684dfca374a1bd5a169391a39d23cd05690",
+      "tracked": true,
+      "uncommitted_changes": false
+    }
+  },
+  "documents": {
+    "AMENDMENT_v5.0.2.md": {
+      "blob": "4dd4c63ad51ce02df688c1682c7da50e00c8295d",
+      "commit": "64cae49760db421fe618c625331a5b4051ae524c",
+      "commit_date": "2026-10-08 14:06:57 +0000",
+      "path": "docs/AMENDMENT_v5.0.2.md",
+      "sha256": "bfbde0e8aee84244e81ab0b4c601387294d9980e01f8543d628e10bc1879aa61",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "IC_PROTOCOL.md": {
+      "blob": "82b27c0928d611a7d62c9253fcea792551a43f67",
+      "commit": "64cae49760db421fe618c625331a5b4051ae524c",
+      "commit_date": "2026-10-08 14:06:57 +0000",
+      "path": "docs/IC_PROTOCOL.md",
+      "sha256": "daed9a44e3a1394d3d16560277bfbc3e58615c2fe490da24083e1bc8611778ab",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "IC_PROTOCOL_v2.md": {
+      "blob": "bde4b6895cd01f5a169924cd4adf94eb64bd7f87",
+      "commit": "cf16fec44536f67628c4fa9b22318fa1e2eccefb",
+      "commit_date": "2026-10-08 21:20:17 +0000",
+      "path": "docs/IC_PROTOCOL_v2.md",
+      "sha256": "42878a4c6cbdc0e75ae98bcaed5ae915c76355f88b3ea72cd2a7c094ed10d1cb",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "IC_PROTOCOL_v3.md": {
+      "blob": "eed27f1af74b59a01eef355f0eddafdcd8282966",
+      "commit": "d23b6eee68e41e9bd27c5cbb0be798af708490fc",
+      "commit_date": "2026-10-08 22:26:15 +0000",
+      "path": "docs/IC_PROTOCOL_v3.md",
+      "sha256": "a2d76f0e16c917f6cc5d4b327e5595fa1edd8021b423216d751ec9066e9f2357",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "PLAN.md": {
+      "blob": "e95123d324f3045925138df9d556d14d108ecb23",
+      "commit": "cf16fec44536f67628c4fa9b22318fa1e2eccefb",
+      "commit_date": "2026-10-08 21:20:17 +0000",
+      "path": "docs/PLAN.md",
+      "sha256": "939e28a8fc1cb007a78eab53f298682b0d087a401664387cadb53376c9c1ae50",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "STATE.md": {
+      "blob": "e8d2e5b2edbc354f921e3996ceef18a52fd1f323",
+      "commit": "64cae49760db421fe618c625331a5b4051ae524c",
+      "commit_date": "2026-10-08 14:06:57 +0000",
+      "path": "docs/STATE.md",
+      "sha256": "d8f6144e5f9204532842925a310f40f94166c450aca0582fe76dcd35147b069e",
+      "tracked": true,
+      "uncommitted_changes": false
+    }
+  },
+  "gate_threshold": {
+    "agree": false,
+    "authority": "the contract. isEligible(address) is what gates stake on-chain.",
+    "contract_threshold": 500,
+    "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
+    "scorer_threshold": 400.0
+  },
+  "generated_at": "2026-10-09T03:33:51.938246+00:00",
+  "generator": {
+    "blob": "HEAD:scorer/facts.py",
+    "commit": null,
+    "commit_date": null,
+    "path": "scorer/facts.py",
+    "sha256": "b74e53e8b95cdcac53e692702193f8153c8b05bbe4ea7911fe2afff2d5952fa8",
+    "tracked": true,
+    "uncommitted_changes": true
+  },
+  "latest_per_address": {
+    "by_engine": {
+      "MM": {
+        "addresses": 165,
+        "by_scorer_version": {
+          "(no version)": 165
+        },
+        "by_stage": {
+          "INACTIVE": 1,
+          "MARGINAL": 26,
+          "PROFICIENT": 92,
+          "STRONG": 46
+        }
+      },
+      "YAAF": {
+        "addresses": 363,
+        "by_scorer_version": {
+          "5.0.0-FORMAL": 363
+        },
+        "by_stage": {
+          "EXPERIMENTAL": 313,
+          "PROMISING": 41,
+          "VERIFIED": 9
+        }
+      },
+      "unclassified_profile": {
+        "addresses": 13,
+        "by_scorer_version": {
+          "5.0.0-FORMAL": 13
+        },
+        "by_stage": {
+          "EXPERIMENTAL": 13
+        }
+      }
+    },
+    "caveat": "an address scored by both engines yields whichever row is newest; engine here is inferred from profile, not from score_version.",
+    "engine_inferred_from": "profile, via the lists read from scores_api.py",
+    "rule": "ROW_NUMBER() PARTITION BY address ORDER BY ts DESC, id DESC"
+  },
+  "measurement": {
+    "gmx_v2": {
+      "aggregate_provenance": {
+        "blob": "81732817505ce73153a8875396166aab4beb3986",
+        "commit": "f22270c3446f303d3c4772181df861821a500d3e",
+        "commit_date": "2026-10-09 02:02:44 +0000",
+        "path": "docs/evidence/gmx_v2/ic_test_gmx_v2_result.aggregate.json",
+        "sha256": "528c3f792957d6839b95428d607cc3e7c897238c7042d367ec9cddfc7d1611de",
+        "tracked": true,
+        "uncommitted_changes": false
+      },
+      "aggregate_sha256": "528c3f792957d6839b95428d607cc3e7c897238c7042d367ec9cddfc7d1611de",
+      "aggregate_verbatim": {
+        "componente_8_teste": {
+          "implementada": {
+            "ic95_hi": 0.06790449951366426,
+            "ic95_lo": -0.25410631330017824,
+            "n": 146,
+            "p": 0.25149374652417245,
+            "rho": -0.09560141351988392
+          },
+          "n_com_spec": 146,
+          "n_sem_spec": 6,
+          "rho_entre_as_duas": 0.03662323521432526,
+          "spec": {
+            "ic95_hi": 0.14695305099095068,
+            "ic95_lo": -0.1778698398441259,
+            "n": 146,
+            "p": 0.8494024954389674,
+            "rho": -0.01587730037692923
+          }
+        },
+        "componentes": {
+          "cvar_pen": {
+            "ic95_hi": 0.06502516700727977,
+            "ic95_lo": -0.2505708999109561,
+            "n": 152,
+            "p_bh": 0.2642902730783749,
+            "p_bhy": 0.8404784185700579,
+            "p_raw": 0.24396025207234606,
+            "rho": -0.0951635666656357,
+            "rotulo": "pen CVaR"
+          },
+          "dd_penalty": {
+            "ic95_hi": -0.24954570734442477,
+            "ic95_lo": -0.5198011190346095,
+            "n": 152,
+            "p_bh": 2.5615066190365354e-06,
+            "p_bhy": 8.145933663196626e-06,
+            "p_raw": 3.940779413902362e-07,
+            "rho": -0.39313076223867033,
+            "rotulo": "pen MaxDD"
+          },
+          "dsr": {
+            "ic95_hi": 0.40707100115647055,
+            "ic95_lo": 0.11050340640641255,
+            "n": 152,
+            "p_bh": 0.0023878671647671102,
+            "p_bhy": 0.007593736973451423,
+            "p_raw": 0.00091841044798735,
+            "rho": 0.2650441842822873,
+            "rotulo": "PSR"
+          },
+          "s_avg_r": {
+            "ic95_hi": 0.39363154070927187,
+            "ic95_lo": 0.094666969364477,
+            "n": 152,
+            "p_bh": 0.003200682451723502,
+            "p_bhy": 0.010178598304190175,
+            "p_raw": 0.0018144854491246587,
+            "rho": 0.2501011918820422,
+            "rotulo": "5  Avg R"
+          },
+          "s_expectancy": {
+            "ic95_hi": 0.39363154070927187,
+            "ic95_lo": 0.094666969364477,
+            "n": 152,
+            "p_bh": 0.003200682451723502,
+            "p_bhy": 0.010178598304190175,
+            "p_raw": 0.0018144854491246587,
+            "rho": 0.2501011918820422,
+            "rotulo": "6  Expectancy"
+          },
+          "s_mc": {
+            "n": 152,
+            "rotulo": "11 Market context",
+            "status": "constante",
+            "valor": 50.0
+          },
+          "s_pf": {
+            "ic95_hi": 0.3733464683251415,
+            "ic95_lo": 0.0710471379047015,
+            "n": 152,
+            "p_bh": 0.00675087629327346,
+            "p_bhy": 0.02146868957697117,
+            "p_raw": 0.0046736835876508565,
+            "rho": 0.22767548757004566,
+            "rotulo": "4  Profit factor"
+          },
+          "s_pf_pct": {
+            "ic95_hi": 0.5061974512755879,
+            "ic95_lo": 0.23215400066259725,
+            "n": 152,
+            "p_bh": 5.447322644958064e-06,
+            "p_bhy": 1.7323214618335626e-05,
+            "p_raw": 1.257074456528784e-06,
+            "rho": 0.37740864993154,
+            "rotulo": "10 PF percentile"
+          },
+          "s_sharpe": {
+            "ic95_hi": 0.43297089719883153,
+            "ic95_lo": 0.14145339057142092,
+            "n": 152,
+            "p_bh": 0.0007053645997467939,
+            "p_bhy": 0.00224315377333119,
+            "p_raw": 0.00021703526146055196,
+            "rho": 0.29403532625300244,
+            "rotulo": "1  Sharpe x PSR"
+          },
+          "s_smoothness": {
+            "ic95_hi": 0.26315650550692066,
+            "ic95_lo": -0.05159629562827061,
+            "n": 152,
+            "p_bh": 0.2170304431596002,
+            "p_bhy": 0.6901858381834823,
+            "p_raw": 0.18364114421196942,
+            "rho": 0.10849852306707096,
+            "rotulo": "9  Smoothness2"
+          },
+          "s_sortino": {
+            "ic95_hi": 0.3624142500892466,
+            "ic95_lo": 0.058456769855857224,
+            "n": 152,
+            "p_bh": 0.009733065855615553,
+            "p_bhy": 0.030952451268382825,
+            "p_raw": 0.0074869737350888865,
+            "rho": 0.2156533636908441,
+            "rotulo": "2  Sortino"
+          },
+          "s_stability": {
+            "ic95_hi": 0.09952791970699879,
+            "ic95_lo": -0.21773808896278746,
+            "n": 152,
+            "p_bh": 0.4586501484763934,
+            "p_bhy": 1.0,
+            "p_raw": 0.4586501484763934,
+            "rho": -0.06063645476552626,
+            "rotulo": "8  Stability2"
+          },
+          "s_vol": {
+            "ic95_hi": 0.39195089048582465,
+            "ic95_lo": 0.09269715636177431,
+            "n": 152,
+            "p_bh": 0.003200682451723502,
+            "p_bhy": 0.010178598304190175,
+            "p_raw": 0.001969650739522155,
+            "rho": 0.24823731746732078,
+            "rotulo": "7  Inv. volatility"
+          },
+          "s_winrate": {
+            "ic95_hi": 0.5314274993874776,
+            "ic95_lo": 0.26454900942350407,
+            "n": 152,
+            "p_bh": 1.793943966932332e-06,
+            "p_bhy": 5.704981764060062e-06,
+            "p_raw": 1.3799568976402554e-07,
+            "rho": 0.40662663270599997,
+            "rotulo": "3  Win rate"
+          }
+        },
+        "corte": 1788526642.0,
+        "corte_data": "2026-09-04T12:57:22+00:00",
+        "descartes": {
+          "sem_trades": 0,
+          "sraw_nulo": 0,
+          "t1_curto": 340,
+          "t2_curto": 8
+        },
+        "dimensionalidade": {
+          "autovalores": [
+            5.658262957806963,
+            1.3233575013024317,
+            1.0724080926643034,
+            0.7515154413349501,
+            0.5035723121487878,
+            0.46055480798294407,
+            0.1595805757283206,
+            0.04590552777246566,
+            0.02484278325883231,
+            -1.035965765172846e-18
+          ],
+          "componentes": [
+            "s_sharpe",
+            "s_sortino",
+            "s_winrate",
+            "s_pf",
+            "s_avg_r",
+            "s_expectancy",
+            "s_vol",
+            "s_stability",
+            "s_smoothness",
+            "s_pf_pct"
+          ],
+          "fatores_90pct": 5,
+          "pares_acima_090": [
+            {
+              "a": "s_avg_r",
+              "b": "s_expectancy",
+              "rho": 1.0
+            },
+            {
+              "a": "s_sharpe",
+              "b": "s_expectancy",
+              "rho": 0.9621440888253354
+            },
+            {
+              "a": "s_sharpe",
+              "b": "s_avg_r",
+              "rho": 0.9621440888253354
+            },
+            {
+              "a": "s_sortino",
+              "b": "s_expectancy",
+              "rho": 0.9404326236209308
+            },
+            {
+              "a": "s_sortino",
+              "b": "s_avg_r",
+              "rho": 0.9404326236209308
+            },
+            {
+              "a": "s_sharpe",
+              "b": "s_sortino",
+              "rho": 0.9374999389043568
+            }
+          ],
+          "variancia_pct": [
+            56.58262957806964,
+            13.233575013024318,
+            10.724080926643035,
+            7.515154413349502,
+            5.035723121487879,
+            4.6055480798294415,
+            1.5958057572832063,
+            0.4590552777246567,
+            0.24842783258832313,
+            -1.0359657651728462e-17
+          ]
+        },
+        "janela": {
+          "fim": "2026-10-08T04:43:43+00:00",
+          "inicio": "2026-07-10T04:34:21+00:00",
+          "t1_dias": 56.34931712962963,
+          "t2_dias": 33.6571875
+        },
+        "min_trades_t1": 30,
+        "min_trades_t2": 10,
+        "n": 152,
+        "observacoes_omitidas": {
+          "motivo": "tabela por agente (endereco, S_RAW, PnL futuro) nao publicada; reprodutivel por recoleta on-chain",
+          "n": 152,
+          "sha256_do_json_canonico": "18f71a74f4e4a942f726a91acb8248eb551c71fc5e8f438e01902beaddb2dc56"
+        },
+        "observatory_commit": null,
+        "protocolo": "IC_PROTOCOL_v2.md (congelado 2026-10-08)",
+        "resultados": {
+          "primario_soma_r": {
+            "ic95_hi": 0.3971481281136705,
+            "ic95_lo": 0.09879618791428289,
+            "n": 152,
+            "p": 0.0015248722477694265,
+            "rho": 0.25400460173001854
+          },
+          "secundario_media_r": {
+            "ic95_hi": 0.40516745159722584,
+            "ic95_lo": 0.10825116001750301,
+            "n": 152,
+            "p": 0.0010141490696109479,
+            "rho": 0.262923521092269
+          },
+          "terciario_pnl_abs": {
+            "ic95_hi": 0.1681150147587401,
+            "ic95_lo": -0.15026612137238643,
+            "n": 152,
+            "p": 0.9110037689851043,
+            "rho": 0.009156506520424677
+          }
+        },
+        "rodado_em": "2026-10-08T05:00:08.624322+00:00",
+        "scorer": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
+        "scorer_commit": "b579e56a23f266dc18fa917c14c8e1278f863b54",
+        "scorer_version": "5.0.0-FORMAL",
+        "sensibilidade": {
+          "delta_winsor": 0.0003040007170657666,
+          "leave_one_out_max": 0.02171549066741596,
+          "winsorizado": 0.2543086024470843
+        },
+        "universo": {
+          "arquivo": "/root/aiagentregistry-observatory/wallets_gmx.txt",
+          "declarados": 500,
+          "payloads_excluidos_fora_do_universo": 0,
+          "payloads_no_universo": 500
+        }
+      },
+      "inputs_manifest_sha256": "b98fcde64a17022c9c5cc9d89dae79bcf3ba44d3c5beb44d92788e453d086a96",
+      "read_before_use": "IC_PROTOCOL_v2.md carries a dated addendum: the universe was selected on dollar PnL over a window inside the forward period. No figure from this run is a population estimate.",
+      "served_coverage": {
+        "absent_from_served_db": 118,
+        "measured_by_canonical_run": 152,
+        "present_in_served_db": 34,
+        "profiles_of_those_present": {
+          "gmx": 34
+        },
+        "why_this_matters": "the published correlation describes the measured population; the API serves the present one. The two are not the same set and both are public."
+      }
+    }
+  },
+  "notes": [],
+  "population": {
+    "addresses_total": 541,
+    "by_profile_and_scorer_version": [
+      {
+        "addrs": 303,
+        "latest_ts": "2026-10-09 03:07:22",
+        "max_s_raw": 60.5953,
+        "min_s_raw": 0.0,
+        "profile": "directional",
+        "rows_n": 5077,
+        "v": "5.0.0-FORMAL"
+      },
+      {
+        "addrs": 98,
+        "latest_ts": "2026-10-09 03:07:22",
+        "max_s_raw": 697.42,
+        "min_s_raw": 184.72,
+        "profile": "hedger",
+        "rows_n": 1584,
+        "v": "(no version)"
+      },
+      {
+        "addrs": 69,
+        "latest_ts": "2026-10-09 03:07:22",
+        "max_s_raw": 801.65,
+        "min_s_raw": 309.28,
+        "profile": "market_maker",
+        "rows_n": 1362,
+        "v": "(no version)"
+      },
+      {
+        "addrs": 60,
+        "latest_ts": "2026-10-06 22:27:19",
+        "max_s_raw": 63.582,
+        "min_s_raw": 0.0,
+        "profile": "gmx",
+        "rows_n": 120,
+        "v": "5.0.0-FORMAL"
+      },
+      {
+        "addrs": 16,
+        "latest_ts": "2026-10-06 02:10:35",
+        "max_s_raw": 59.7465,
+        "min_s_raw": 0.0,
+        "profile": "unknown",
+        "rows_n": 64,
+        "v": "5.0.0-FORMAL"
+      },
+      {
+        "addrs": 11,
+        "latest_ts": "2026-10-06 02:10:35",
+        "max_s_raw": 8.5953,
+        "min_s_raw": 0.0,
+        "profile": "market_maker",
+        "rows_n": 44,
+        "v": "5.0.0-FORMAL"
+      },
+      {
+        "addrs": 10,
+        "latest_ts": "2026-10-06 02:10:35",
+        "max_s_raw": 0.0,
+        "min_s_raw": 0.0,
+        "profile": "hedger",
+        "rows_n": 40,
+        "v": "5.0.0-FORMAL"
+      }
+    ],
+    "caveat": "profile classifies the agent, score_version identifies the engine that produced the row; they are not the same axis and rows exist where they disagree.",
+    "rows_total": 8291,
+    "source": "observatory.db / yaaf_scores"
+  },
+  "provenance_clean": false,
+  "registry": {
+    "enumerated_at": "2026-10-08T22:19:42.623751+00:00",
+    "is_eligible": 0,
+    "limiar": 500,
+    "logs": {
+      "AgentRegistered": null,
+      "AgentSlashed": null
+    },
+    "note": "per-agent records are in the committed file, not here",
+    "por_status": {
+      "ACTIVE": 2
+    },
+    "pre_corte": 2,
+    "provenance": {
+      "blob": "40f9a56904b5f33b0a0c43275761c1a8fe4d7c23",
+      "commit": "b8620712e98e8819c9f1b81fb12e24b6925632af",
+      "commit_date": "2026-10-09 02:22:24 +0000",
+      "path": "docs/evidence/registry_v3/registry_v3_agents.json",
+      "sha256": "5792ef515965187e8c42fc0ec81dd24c2604e9d5e903391004fe354b042f61fc",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "score_acima_do_limiar": 0,
+    "total_agents": 2
+  },
+  "rules": [
+    "Every number here is read or computed from a source, never transcribed.",
+    "Every count carries the axis it was grouped by.",
+    "A number without a source is absent, not estimated; see notes.",
+    "Published surfaces should read this file instead of carrying literals."
+  ],
+  "schema": "yelden.facts/1",
+  "scorer": {
+    "algebraic_s_raw_ceiling": 100.0,
+    "bands": [
+      {
+        "from": 0,
+        "stage": "EXPERIMENTAL",
+        "to": 199
+      },
+      {
+        "from": 200,
+        "stage": "PROMISING",
+        "to": 399
+      },
+      {
+        "from": 400,
+        "stage": "VERIFIED",
+        "to": 599
+      },
+      {
+        "from": 600,
+        "stage": "ELITE",
+        "to": 799
+      },
+      {
+        "from": 800,
+        "stage": "LEGENDARY",
+        "to": 1000
+      }
+    ],
+    "bands_note": "derived by probing stage() over 0..1000, not transcribed",
+    "caps": {
+      "CAP_AVG_R": 1.5,
+      "CAP_CALMAR": 4.0,
+      "CAP_EXPECT": 0.6,
+      "CAP_PF": 2.5,
+      "CAP_SHARPE": 2.5,
+      "CAP_SORTINO": 8.0,
+      "CAP_VOL_R": 2.0
+    },
+    "ceiling_note": "computed as sum(100*w)/W_SUM: every component is scaled to [0,100], so this is 100 whenever no component is inert. The attainable ceiling is an empirical question: see component_dispersion.inert_components and .inert_weight, and population...max_s_raw. This field alone does NOT tell you whether the amendment was applied — component_count and w_sum do.",
+    "component_count": 8,
+    "components": {
+      "avg_r": 0.16,
+      "pf": 0.1,
+      "pf_pct": 0.12,
+      "sharpe_dsr": 0.14,
+      "sortino": 0.07,
+      "stability": 0.09,
+      "vol": 0.05,
+      "winrate": 0.08
+    },
+    "fee_model": {
+      "FEE_BASE_RATE_USDC": 10.0,
+      "formula": "FEE_BASE_RATE_USDC * (1000 - sistema) / 1000"
+    },
+    "gates": {
+      "MIN_TRADES_SRAW": 30,
+      "VOLUME_FLOOR_FRAC": 0.001
+    },
+    "is_eligible_threshold_in_scorer": 400.0,
+    "penalties": {
+      "CVAR_CAP": 2.0,
+      "CVAR_PEN_SCALE": 15.0,
+      "DD_PEN_WEIGHT": 0.2
+    },
+    "provenance": {
+      "blob": "27aed464683af52924a677afe04e9599e216ec96",
+      "commit": "764d26a2f374b0e19720212f7276825f8b4a9796",
+      "commit_date": "2026-10-09 03:08:52 +0000",
+      "path": "scorer/yaaf_score_v5_formal.py",
+      "sha256": "cfd8a78d0e3f4213d6b983a701be6cbb394f94a282823f1ff5b468b4279d198d",
+      "tracked": true,
+      "uncommitted_changes": false
+    },
+    "sistema": {
+      "CF_N_STAR": 250,
+      "EMA_ALPHA": 0.85,
+      "EMA_INITIAL": 300.0,
+      "SF_DISP_REF": 25.0,
+      "SF_LEVEL_REF": 45.0,
+      "SF_WINDOW": 8
+    },
+    "stake_floors_usdc": {
+      "ELITE": 1000,
+      "EXPERIMENTAL": 50,
+      "LEGENDARY": 2000,
+      "PROMISING": 200,
+      "VERIFIED": 500
+    },
+    "version": "5.0.2-FORMAL",
+    "w_sum": 0.81
+  },
+  "uncommitted": [
+    "scorer/facts.py"
+  ]
+}
