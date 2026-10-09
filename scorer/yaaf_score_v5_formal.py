@@ -12,16 +12,19 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.0.0-FORMAL"
+VERSION_SCORE = "5.0.2-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
-    "avg_r": 0.07, "expectancy": 0.09, "vol": 0.05, "stability": 0.09,
-    "smoothness": 0.08, "pf_pct": 0.12, "mc": 0.07,
+    "avg_r": 0.16, "vol": 0.05, "stability": 0.09, "pf_pct": 0.12,
 }
-# A tabela do spec soma 0.96, nao 1.00 como o texto normativo afirma.
-# A soma ponderada e dividida por W_SUM para que S_RAW use a faixa [0,100]
-# declarada, preservando a importancia relativa calibrada. Ver Emenda v5.0.1.
+# Emenda v5.0.2, D1 + D2 + D3. A tabela do spec somava 0.96 com 0.15 de peso
+# inerte: Smoothness^2 era zero em 151 dos 152 agentes medidos e Mc era a
+# constante 50 para todos, o que punha o teto atingivel de S_RAW em 88.0208.
+# Removidos os dois e fundidos avg_r e expectancy (correlacao medida +1.0000)
+# num componente de peso 0.16, sobram 8 componentes somando 0.81, todos capazes
+# de chegar a 100 — e o teto passa a ser exatamente 100.0000.
+# A divisao por W_SUM preserva a importancia relativa calibrada.
 W_SUM = sum(W.values())
 
 CAP_SHARPE   = 2.5
@@ -187,14 +190,10 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     win_rate  = finite(metrics.get("win_rate"))
     pf        = finite(metrics.get("profit_factor"))
     avg_r     = finite(metrics.get("avg_r"))
-    exp_r     = finite(metrics.get("expectancy_r"))
     vol_r     = finite(metrics.get("vol_r"))
     stability = clamp(finite(metrics.get("stability"), 0.5), 0.0, 1.0)
-    smoothness= clamp(finite(metrics.get("smoothness")), 0.0, 1.0)
     max_dd    = max(finite(metrics.get("max_dd_pct")), 0.0)
     pf_pct    = clamp(finite(metrics.get("pf_pct"), 50.0), 0.0, 100.0)
-    s_mc_val  = clamp(finite(metrics.get("s_mc"), 50.0), 0.0, 100.0)
-    mc_beta   = finite(metrics.get("mc_beta"), 0.0)
 
     skew = finite(metrics.get("skew"), 0.0)
     kurt = finite(metrics.get("kurt"), 3.0)
@@ -220,25 +219,26 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     s_sortino    = clamp(max(sortino, 0.0) / CAP_SORTINO, 0.0, 1.0) * 100.0
     s_winrate    = clamp(win_rate, 0.0, 1.0) * 100.0
     s_pf         = clamp(max(pf - 1.0, 0.0) / (CAP_PF - 1.0), 0.0, 1.0) * 100.0
+    # D2: avg_r e expectancy eram a mesma variavel com caps diferentes
+    # (rho = +1.0000). Fundidos no cap 1.5, porque 0.6 saturava num R medio que
+    # agentes competentes excedem de rotina — cego exatamente no topo da faixa.
     s_avg_r      = clamp(avg_r / CAP_AVG_R, 0.0, 1.0) * 100.0
-    s_expectancy = clamp(max(exp_r, 0.0) / CAP_EXPECT, 0.0, 1.0) * 100.0
     s_vol        = clamp(1.0 - vol_r / CAP_VOL_R, 0.0, 1.0) * 100.0
     s_stability  = (stability ** 2) * 100.0
-    s_smoothness = (smoothness ** 2) * 100.0
     s_pf_pct     = pf_pct
-    s_mc         = s_mc_val
 
-    cvar_pen = min(cvar_95 / CVAR_CAP, 1.0) * CVAR_PEN_SCALE
+    # D10: min(...) nao tem limite inferior e compute_cvar devolve valor negativo
+    # quando os 5% piores trades sao lucrativos, entao a penalidade virava bonus
+    # sem teto. Medido: +30.0000 pontos com cvar_95 = -4. O dd_pen ja tinha piso.
+    cvar_pen = clamp(cvar_95 / CVAR_CAP, 0.0, 1.0) * CVAR_PEN_SCALE
     dd_pen   = max_dd * DD_PEN_WEIGHT
 
     if n_trades >= MIN_TRADES_SRAW and vol_ok:
         core = (
             s_sharpe_dsr * W["sharpe_dsr"] + s_sortino * W["sortino"]
             + s_winrate * W["winrate"] + s_pf * W["pf"]
-            + s_avg_r * W["avg_r"] + s_expectancy * W["expectancy"]
-            + s_vol * W["vol"] + s_stability * W["stability"]
-            + s_smoothness * W["smoothness"] + s_pf_pct * W["pf_pct"]
-            + s_mc * W["mc"]
+            + s_avg_r * W["avg_r"] + s_vol * W["vol"]
+            + s_stability * W["stability"] + s_pf_pct * W["pf_pct"]
         ) / W_SUM
         s_raw = clamp(core - cvar_pen - dd_pen, 0.0, 100.0)
     else:
@@ -275,9 +275,9 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
         "s_min_usdc": s_min_usdc,
         "is_eligible": is_eligible,
         "s_sharpe": s_sharpe_dsr, "s_sortino": s_sortino, "s_winrate": s_winrate,
-        "s_pf": s_pf, "s_avg_r": s_avg_r, "s_expectancy": s_expectancy,
-        "s_vol": s_vol, "s_stability": s_stability, "s_smoothness": s_smoothness,
-        "s_pf_pct": s_pf_pct, "s_mc": s_mc, "mc_beta": mc_beta, "dsr": dsr,
+        "s_pf": s_pf, "s_avg_r": s_avg_r,
+        "s_vol": s_vol, "s_stability": s_stability,
+        "s_pf_pct": s_pf_pct, "dsr": dsr,
         "cvar_95": cvar_95, "cvar_pen": cvar_pen, "dd_penalty": dd_pen,
         "volume_ok": vol_ok, "s_raw": s_raw, "ema_prev": ema_prev, "ema_new": ema_new,
         "cf": cf, "sf": sf, "sistema": sistema, "stage": stage_name,
