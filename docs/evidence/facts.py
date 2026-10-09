@@ -409,7 +409,15 @@ def main():
         # anterior culpava o padrao, e quem lesse o facts.json daqui a um mes
         # concluiria que o parsing quebrou. Um nulo com a causa errada e pior
         # que um nulo.
-        if "is_eligible" not in src:
+        # Linhas de CODIGO, nao o texto cru: patch_v560 deixou um
+        # comentario explicando a remocao, e o comentario contem a palavra.
+        # Testar o texto cru fez esta nota afirmar falha de leitura onde houve
+        # remocao deliberada. O predicado abaixo e o mesmo de
+        # test_v560_weights_eligible.py -- "sobra apenas em comentario, se
+        # sobrar" -- e estava escrito antes deste erro ser cometido.
+        _codigo = [l for l in src.splitlines()
+                   if "is_eligible" in l and not l.strip().startswith("#")]
+        if not _codigo:
             nota("o scorer nao emite is_eligible desde 5.6.0, de proposito: o "
                  "limiar que governa e SCORE_THRESHOLD_ACTIVE, do contrato. "
                  "Campo nulo porque nao ha mais o que comparar, e nao por "

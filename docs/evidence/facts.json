@@ -215,13 +215,13 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": null
   },
-  "generated_at": "2026-10-09T18:39:40.530761+00:00",
+  "generated_at": "2026-10-09T18:42:01.813658+00:00",
   "generator": {
-    "blob": "b36c42b98aae087d388003ac92fccd8431466106",
-    "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
-    "commit_date": "2026-10-09 13:35:18 +0000",
+    "blob": "03e3828dd04adef48a652b69b73de3d770f547db",
+    "commit": "1df367c9ff5e588caba006338fc7671ecf8b1fa5",
+    "commit_date": "2026-10-09 18:39:50 +0000",
     "path": "docs/evidence/facts.py",
-    "sha256": "d060313dee147ba316f60e567b8d9c395834953ac3f8a4be23473b0e639ff8b7",
+    "sha256": "4e400845eb09bb6cf5d66bf8e0328d690061655be1e53d1b14334b4c185359e3",
     "tracked": true,
     "uncommitted_changes": true
   },
@@ -582,7 +582,7 @@
     }
   },
   "notes": [
-    "is_eligible aparece no scorer mas nao na forma `sistema >= <numero>`: campo nulo por falha de leitura, e isto merece olhar"
+    "o scorer nao emite is_eligible desde 5.6.0, de proposito: o limiar que governa e SCORE_THRESHOLD_ACTIVE, do contrato. Campo nulo porque nao ha mais o que comparar, e nao por falha de leitura"
   ],
   "population": {
     "addresses_total": 785,
