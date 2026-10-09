@@ -48,3 +48,5 @@ submission_receipt.json
 mt5_monitor_state.json
 yelden_state.json
 agent_data.json
+scorer/*.pre-v*
+scorer/__pycache__/
