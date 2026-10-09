@@ -100,6 +100,10 @@ wrong — they were the output of the specification in force at the time.
 
 **Measured effect:** (pending the deliberate re-score)
 
+> **Read the correction at the end of this file before using any figure above.**
+> The effect sizes in the sections above were overstated and are retracted
+> there.
+
 ## Open, and not to be resolved by assumption
 
 The payload set declares 43,984 trades; `MEASUREMENT_INPUTS.md` records 39,945
@@ -107,3 +111,107 @@ for the same 500 payloads. The difference is 4,039. Candidates: `metrics.trades`
 (the collector's count) against `len(trades)` (what the test counted), or a
 re-collection after the IC run. 39,945 is a published figure, so this is
 resolved by checking, not by choosing.
+
+---
+
+## Correction, 2026-10-09, after the first version of this document
+
+The first version of this file, committed in `8e818f4`, overstated the effect
+of the defect it describes. Four of its claims do not survive measurement. They
+are retracted here rather than edited away, because the history of the
+corrections is part of the evidence.
+
+### What was actually measured
+
+**GMX**, `yaaf_state.total_trades` against the payload's own `metrics.trades`,
+58 addresses paired:
+
+| | |
+|---|---|
+| median ratio | 1.13 |
+| min | 0.42 |
+| max | 2.00 |
+
+One accumulation, two at most — consistent with 2.0 score rows per GMX address.
+
+**Hyperliquid**, `total_trades` against `COUNT(*)` of that address's rows in
+`fills`, 309 addresses paired. Trades are formed by grouping fills, so
+`trades <= fills` always, and any ratio above 1 is accumulation with no
+interpretation needed. No code path deletes from `fills` (checked), so the
+bound holds.
+
+| | |
+|---|---|
+| addresses with ratio > 1 | **259 of 309** |
+| median ratio | 4.56 |
+| p90 | 11.07 |
+| max | 19.36 |
+
+**The effect on CF**, 337 addresses paired with their fill counts:
+
+| | |
+|---|---|
+| `total_trades >= 250`, so CF = 1.0 today | 298 |
+| of those, holding fewer than 250 fills — CF = 1.0 **only** because of the accumulation | **12** |
+| holding 250 or more fills | 322 |
+
+### Retracted
+
+1. **"ratio 83.5x".** Invalid. It divided the trades declared in the 500 GMX
+   payloads (43,984) by `SUM(total_trades)` over *both* populations
+   (3,671,818). The HL payloads carry no `metrics.trades` at all — `score_yaaf`
+   computes metrics from `fills` in the database — so the two sides of that
+   ratio are different populations. The figure also appears in the commit
+   message of `216bcb2`, which cannot be edited; this paragraph is its
+   retraction.
+
+2. **"CF was 1.0 for essentially the whole population"** and **"one of the
+   three factors of SISTEMA has never discounted anyone".** Wrong. CF is 1.0
+   for 298 of 337, and 286 of those agents are above the saturation point on
+   their own fill count. The accumulation inflated numbers that were already
+   saturated. Saturated is saturated. The measured damage to CF is 12
+   addresses of 337, about 3.6%.
+
+3. **"two of the three factors of SISTEMA were inert for roughly 95% of the
+   population".** Unsupported. The 379-of-391 identical `round_history`
+   windows are consistent with a population whose metrics did not change
+   between refreshes: `refresh_all.sh` re-collects every address daily
+   (`feed_yaaf_hl_fast.py wallets_full.txt`, "reprocessa TODOS os enderecos"),
+   so an unchanged `s_raw` can be a correct observation of an agent that did
+   not trade. In that case `sigma_s = 0` and the dispersion term being 1.0 is
+   the formula working, not failing.
+
+4. **"the pipeline never refreshes payload"**, stated in the discussion that
+   produced this document though not in the document itself. Wrong in the
+   other direction: `refresh_all.sh` reprocesses all addresses daily, and the
+   spread of payload mtimes (325 on 10-06, 131 on 10-07, 124 on 10-08, 143 on
+   10-09) reflects partial completion per run, not one-time collection.
+
+### What survives
+
+D11 is correct, and by code-level proof rather than production statistics: the
+acceptance test shows `total_trades` 65 -> 130 and `cf` 0.509902 -> 0.721110 on
+a second call with the same observation. A scorer should not maintain a sum it
+cannot validate, whatever the magnitude of the error that sum accumulated.
+
+The defect is one of data integrity in `yaaf_state`, not of the published
+score. Zeroing `total_trades` in the re-score is still right, because the
+stored value is wrong — but the expected effect on published scores is small,
+not severe. The EMA reset at the version boundary remains the large effect of
+the re-score; the CF correction is marginal.
+
+### P1, downgraded from fix to open question
+
+The earlier framing — that the pipeline fakes observations by re-scoring
+unchanged payloads — rests on a question this project has not decided and
+which is not a bug: **does an unchanged observation count as an
+observation?** For an EMA meant to express maturity over time, an agent that
+stays good for months arguably should mature. For a scorer whose input is
+trades, no new trades is no new information. Both readings are defensible,
+both move SISTEMA for the whole population, and the choice belongs in the
+specification, declared, with its consequence computed first.
+
+What is a defect, narrowly: `emit_yaaf_final.py` scores every payload on every
+run, including addresses that the collection step did not reach that day. For
+that subset, and only for it, the scoring adds an observation that is not new.
+Sizing that subset is a prerequisite to deciding P1, not a consequence of it.
