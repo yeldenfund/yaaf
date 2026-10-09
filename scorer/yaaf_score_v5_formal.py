@@ -12,7 +12,7 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.2.0-FORMAL"
+VERSION_SCORE = "5.3.0-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
@@ -206,7 +206,9 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
 
     skew = finite(metrics.get("skew"), 0.0)
     kurt = finite(metrics.get("kurt"), 3.0)
-    n_daily = int(metrics.get("n_daily", max(n_trades, 2)))
+    # D6: n_daily saiu. Era contagem de dias e alimentava o T do PSR, cujo
+    # Sharpe e por trade. Nada mais no scorer usava este valor. O enrich ainda
+    # produz metrics["n_daily"], que fica como metadado do coletor.
     cvar_95 = finite(metrics.get("cvar_95"), 0.0)
 
     if trades is not None and (cvar_95 <= 0 or abs(skew) < 1e-12):
@@ -222,9 +224,11 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
                 if cvar_95 <= 0:
                     cvar_95 = compute_cvar(r_np, alpha=0.95)
 
-    dsr = compute_dsr(sharpe, n_obs=n_daily, skew=skew, kurt=kurt, n_trials=n_trials)
+    # D6: T = numero de trades, que e a serie que produziu `sharpe`.
+    # D5: o valor e um PSR enquanto n_trials == 1, e o nome passa a dizer isso.
+    psr = compute_dsr(sharpe, n_obs=n_trades, skew=skew, kurt=kurt, n_trials=n_trials)
 
-    s_sharpe_dsr = clamp(max(sharpe, 0.0) / CAP_SHARPE, 0.0, 1.0) * 100.0 * dsr
+    s_sharpe_dsr = clamp(max(sharpe, 0.0) / CAP_SHARPE, 0.0, 1.0) * 100.0 * psr
     s_sortino    = clamp(max(sortino, 0.0) / CAP_SORTINO, 0.0, 1.0) * 100.0
     s_winrate    = clamp(win_rate, 0.0, 1.0) * 100.0
     s_pf         = clamp(max(pf - 1.0, 0.0) / (CAP_PF - 1.0), 0.0, 1.0) * 100.0
@@ -292,7 +296,7 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
         "s_sharpe": s_sharpe_dsr, "s_sortino": s_sortino, "s_winrate": s_winrate,
         "s_pf": s_pf, "s_avg_r": s_avg_r,
         "s_vol": s_vol, "s_stability": s_stability,
-        "s_pf_pct": s_pf_pct, "dsr": dsr,
+        "s_pf_pct": s_pf_pct, "psr": psr, "psr_n_obs": n_trades, "psr_n_trials": n_trials,
         "cvar_95": cvar_95, "cvar_pen": cvar_pen, "dd_penalty": dd_pen,
         "assessable": assessable, "gate": gate,
         "s_raw": s_raw, "ema_prev": ema_prev, "ema_new": ema_new,

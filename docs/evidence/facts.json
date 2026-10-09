@@ -214,7 +214,7 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": 400.0
   },
-  "generated_at": "2026-10-09T15:07:08.307610+00:00",
+  "generated_at": "2026-10-09T16:15:32.502800+00:00",
   "generator": {
     "blob": "b36c42b98aae087d388003ac92fccd8431466106",
     "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
@@ -747,7 +747,7 @@
           "matches_canonical": true,
           "path": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
           "resolves_to": null,
-          "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a"
+          "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489"
         },
         {
           "canonical": false,
@@ -756,7 +756,7 @@
           "matches_canonical": true,
           "path": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py",
           "resolves_to": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
-          "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a"
+          "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489"
         }
       ],
       "copy_count": 2,
@@ -821,11 +821,11 @@
       "DD_PEN_WEIGHT": 0.2
     },
     "provenance": {
-      "blob": "ee3a607128bf4749245802e95738e2f89e100523",
-      "commit": "0ae1704401dcedea78a635efd354571132c04842",
-      "commit_date": "2026-10-09 03:53:55 +0000",
+      "blob": "b884142fcc7b5ea8355b2931370f7a86761f3a32",
+      "commit": "216bcb2b7f8d47f1444e758798298506323cd16b",
+      "commit_date": "2026-10-09 15:07:08 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
-      "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a",
+      "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489",
       "tracked": true,
       "uncommitted_changes": true
     },
@@ -844,7 +844,7 @@
       "PROMISING": 200,
       "VERIFIED": 500
     },
-    "version": "5.2.0-FORMAL",
+    "version": "5.3.0-FORMAL",
     "w_sum": 0.81
   },
   "uncommitted": [
