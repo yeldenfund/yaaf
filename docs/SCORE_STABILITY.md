@@ -1,0 +1,1 @@
+[...colar o conteúdo acima...]
