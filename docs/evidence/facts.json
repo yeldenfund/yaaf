@@ -212,9 +212,9 @@
     "authority": "the contract. isEligible(address) is what gates stake on-chain.",
     "contract_threshold": 500,
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
-    "scorer_threshold": 400.0
+    "scorer_threshold": null
   },
-  "generated_at": "2026-10-09T16:54:55.445952+00:00",
+  "generated_at": "2026-10-09T17:08:08.014202+00:00",
   "generator": {
     "blob": "b36c42b98aae087d388003ac92fccd8431466106",
     "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
@@ -580,7 +580,9 @@
       }
     }
   },
-  "notes": [],
+  "notes": [
+    "o literal de is_eligible nao casou o padrao no scorer; campo nulo"
+  ],
   "population": {
     "addresses_total": 541,
     "by_profile_and_scorer_version": [
@@ -728,14 +730,14 @@
     "ceiling_note": "computed as sum(100*w)/W_SUM: every component is scaled to [0,100], so this is 100 whenever no component is inert. The attainable ceiling is an empirical question: see component_dispersion.inert_components and .inert_weight, and population...max_s_raw. This field alone does NOT tell you whether the amendment was applied — component_count and w_sum do.",
     "component_count": 8,
     "components": {
-      "avg_r": 0.16,
-      "pf": 0.1,
-      "pf_pct": 0.12,
-      "sharpe_dsr": 0.14,
-      "sortino": 0.07,
-      "stability": 0.09,
-      "vol": 0.05,
-      "winrate": 0.08
+      "avg_r": 0.125,
+      "pf": 0.125,
+      "pf_pct": 0.125,
+      "sharpe_dsr": 0.125,
+      "sortino": 0.125,
+      "stability": 0.125,
+      "vol": 0.125,
+      "winrate": 0.125
     },
     "copies": {
       "agree": true,
@@ -748,7 +750,7 @@
           "matches_canonical": true,
           "path": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
           "resolves_to": null,
-          "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a"
+          "sha256": "9d22e9eed2aae24cbf6051f0d7eed7020aa1225dac714027b1673d6b45f5c99d"
         },
         {
           "canonical": false,
@@ -757,7 +759,7 @@
           "matches_canonical": true,
           "path": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py",
           "resolves_to": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
-          "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a"
+          "sha256": "9d22e9eed2aae24cbf6051f0d7eed7020aa1225dac714027b1673d6b45f5c99d"
         }
       ],
       "copy_count": 2,
@@ -815,18 +817,18 @@
       "MIN_TRADES_SRAW": 30,
       "VOLUME_FLOOR_FRAC": 0.001
     },
-    "is_eligible_threshold_in_scorer": 400.0,
+    "is_eligible_threshold_in_scorer": null,
     "penalties": {
       "CVAR_CAP": 2.0,
       "CVAR_PEN_SCALE": 15.0,
       "DD_PEN_WEIGHT": 0.2
     },
     "provenance": {
-      "blob": "29b646250614709c1c9dbb290adc91068455d930",
-      "commit": "310fb6d9b36ad5d9bc82eb0ed79c559f97bc2e5b",
-      "commit_date": "2026-10-09 16:15:32 +0000",
+      "blob": "00368bfb1ef0dd9d429f7fc2df43ff6f883ffef2",
+      "commit": "c294dd62ed43306ef4c29b2541066ef9d42d3edc",
+      "commit_date": "2026-10-09 16:54:55 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
-      "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a",
+      "sha256": "9d22e9eed2aae24cbf6051f0d7eed7020aa1225dac714027b1673d6b45f5c99d",
       "tracked": true,
       "uncommitted_changes": true
     },
@@ -845,8 +847,8 @@
       "PROMISING": 200,
       "VERIFIED": 500
     },
-    "version": "5.5.0-FORMAL",
-    "w_sum": 0.81
+    "version": "5.6.0-FORMAL",
+    "w_sum": 1.0
   },
   "uncommitted": [
     "scorer/yaaf_score_v5_formal.py"

@@ -12,19 +12,29 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.5.0-FORMAL"
+VERSION_SCORE = "5.6.0-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
     "avg_r": 0.16, "vol": 0.05, "stability": 0.09, "pf_pct": 0.12,
 }
+# v5.6.0. Peso igual. Os numeros acima ficam como registro do que foi
+# substituido e sao sobrescritos aqui. Derivar de W, em vez de reescrever a
+# lista de nomes, mantem UMA fonte para o conjunto de componentes: uma segunda
+# lista poderia divergir do que o composto indexa, e o composto indexa W.
+W = {k: 1.0 / len(W) for k in W}
 # Emenda v5.0.2, D1 + D2 + D3. A tabela do spec somava 0.96 com 0.15 de peso
 # inerte: Smoothness^2 era zero em 151 dos 152 agentes medidos e Mc era a
 # constante 50 para todos, o que punha o teto atingivel de S_RAW em 88.0208.
 # Removidos os dois e fundidos avg_r e expectancy (correlacao medida +1.0000)
 # num componente de peso 0.16, sobram 8 componentes somando 0.81, todos capazes
 # de chegar a 100 — e o teto passa a ser exatamente 100.0000.
-# A divisao por W_SUM preserva a importancia relativa calibrada.
+# v5.6.0: nao ha mais importancia relativa calibrada a preservar. A divisao
+# por W_SUM continua, e com peso igual ela preserva a escala: o teto algebrico
+# segue exatamente 100. Fundamento em SPEC_CHANGE_v5.4.0.md -- Dawes (1979),
+# DeMiguel/Garlappi/Uppal (2009), e o fato de que a calibracao substituida foi
+# feita com CF pregado em 1, o PSR com T errado e dois componentes constantes.
+# Custo medido: rho 0,9944 contra os pesos calibrados, 18 dos 20 primeiros.
 W_SUM = sum(W.values())
 
 CAP_SHARPE   = 2.5
@@ -305,12 +315,15 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     monthly_fee = round(FEE_BASE_RATE_USDC * (1000 - sistema) / 1000, 2)
     stage_name = stage(sistema)
     s_min_usdc = STAKE_FLOORS_USDC.get(stage_name, 50)
-    is_eligible = sistema >= 400
+    # v5.6.0: is_eligible saiu. O limiar de elegibilidade e do contrato
+    # (SCORE_THRESHOLD_ACTIVE = 500) e e lido de la pela API. O campo daqui
+    # usava 400, o piso da faixa VERIFIED, e foi ele que fez a pagina publica
+    # anunciar 9 elegiveis onde o contrato aceita 4. Segunda opiniao que nao
+    # governa nada e pode contradizer quem governa nao e campo, e defeito.
 
     return {
         "monthly_fee_usdc": monthly_fee,
         "s_min_usdc": s_min_usdc,
-        "is_eligible": is_eligible,
         "s_sharpe": s_sharpe_dsr, "s_sortino": s_sortino, "s_winrate": s_winrate,
         "s_pf": s_pf, "s_avg_r": s_avg_r,
         "s_vol": s_vol, "s_stability": s_stability,
