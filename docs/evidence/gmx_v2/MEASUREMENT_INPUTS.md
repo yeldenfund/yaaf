@@ -22,6 +22,7 @@ Run 2026-10-08T05:00:08Z. 500 addresses declared, 500 payloads, 39,945 trades; 1
 | selection_check2.py (analysis/) | 270aaf92a99093cc5256d002c17bdb3bfde276e39122f81d36580735cf71ffc3 |
 | selection_check3.py (analysis/) | e09a7a12a4058a8b4aa87ca89eee83ffce8d2016e4b353a10755f41401fbe30b |
 | weights_diag2.py (analysis/) | 587673109f7352a355c83b60b9fe1b9746d42610ffc491ba838850763c28945b |
+| _summary.json, the 500 payloads concatenated by the collector (withheld, per-agent statistics) | be8739e76375c3bface23fc929dec8bfa2384cc57d218a0b320552e1de9101a8 |
 | private evidence tarball (not published) | ad1478b5a5856f4226e36aeb2075113e45eef6e2010564a2a80372e5fdefee3b |
 
 ## Checked on the host when this record was written
@@ -42,6 +43,7 @@ Run 2026-10-08T05:00:08Z. 500 addresses declared, 500 payloads, 39,945 trades; 1
 - analysis/ holds the scripts behind the tables in the v2 addendum (selection_check*.py) and the outcome-blind weight diagnostic (weights_diag2.py). They hardcode host paths and read the withheld per-agent result and wallet files, so they are inspectable here and re-runnable only with those files.
 - Withheld because they carry per-agent statistics: the per-agent table (observacoes, 152 rows), the full result JSON, wallets_gmx.txt, gmx_discover_raw.json. Their hashes are above; the canonical-JSON hash of the per-agent table is in the aggregate file.
 - To re-run ic_test_gmx_v2.py: it hardcodes OBS=/root/aiagentregistry-observatory and SCORER=/root/yaaf/scorer and reads payloads from OBS/yaaf_payloads_gmx. Mirror that layout rather than editing the script, because editing it changes its hash.
+- The payload directory holds **501** files against a manifest of 500. The extra one is `_summary.json`, the same 500 records concatenated by the collector: top-level list, each element carrying `agent_id`, `metrics`, `source`, `trades`, `ts`. It is not an input. `ic_test_gmx_v2.py` line 147 excludes it by rule, not by accident: `[f for f in sorted(PAYLOADS.glob("*.json")) if not f.stem.startswith("_")]`. Its mtime is 2026-10-08T04:50:19Z, ten minutes before the run at 05:00:08Z, so it was present and skipped by that filter, which is why the count is 500 and not 501. The manifest covers the 500 inputs and deliberately not this file. It is withheld for the same reason as the payloads: per-agent statistics, keyed by address. Its hash is in the table above, so an auditor can confirm the file they find is the file described here without being given it.
 
 ## Precondition for every future measurement
 
