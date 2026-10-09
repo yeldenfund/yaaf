@@ -27,7 +27,8 @@ Run 2026-10-08T05:00:08Z. 500 addresses declared, 500 payloads, 39,945 trades; 1
 ## Checked on the host when this record was written
 
 - Payloads: all 500 verify against the manifest; 39,945 trades.
-- Scorer blob identical to the file at scorer_commit b579e56a23f266dc18fa917c14c8e1278f863b54: yes
+- Scorer: the commit that introduced the file as it ran is 1058f9a2f2be6721c6ddcfcaddbfecd75e933da9 de 2026-10-07 13:01:16 +0000; blob 3c0aa19f4af007d56ccea41937af1712b433fc22.
+- *Corrected after this file was first committed.* It previously named scorer_commit b579e56a23f266dc18fa917c14c8e1278f863b54. That check passed, because b579e56a's tree contains the same blob, but b579e56a did not touch the scorer: `git log -1 -- scorer/yaaf_score_v5_formal.py` returns the commit above, earlier the same day. Naming b579e56a dated the scorer later than it is and pointed an auditor at a commit about the public API. The correction is recorded rather than amended, because the history of the corrections is part of the evidence.
 - gmx_discover_raw.json: encontrado, mtime 2026-10-06 13:39:02.279398689 +0000, 500 identico aos 500: True
 - Source paths of the analysis scripts: /root/aiagentregistry-observatory/selection_check.py /root/selection_check2.py /root/aiagentregistry-observatory/selection_check3.py
 
