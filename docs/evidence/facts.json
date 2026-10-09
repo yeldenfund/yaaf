@@ -2,127 +2,128 @@
   "component_dispersion": {
     "components": {
       "cf": {
-        "distinct": 47,
+        "distinct": 152,
         "inert": false,
         "max": 1.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "cvar_pen": {
-        "distinct": 146,
+        "distinct": 378,
         "inert": false,
         "max": 15.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "dd_penalty": {
         "distinct": 350,
         "inert": false,
-        "max": 641.740874,
+        "max": 17.756,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "s_avg_r": {
-        "distinct": 98,
+        "distinct": 192,
         "inert": false,
         "max": 100.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "s_expectancy": {
-        "distinct": 80,
+        "distinct": 5,
         "inert": false,
         "max": 100.0,
         "min": 0.0,
-        "n": 363
+        "n": 8
       },
       "s_mc": {
         "distinct": 1,
         "inert": true,
         "max": 50.0,
         "min": 50.0,
-        "n": 363
+        "n": 8
       },
       "s_min_usdc": {
-        "distinct": 3,
-        "inert": false,
-        "max": 500.0,
-        "min": 50.0,
-        "n": 302
-      },
-      "s_pf": {
-        "distinct": 85,
-        "inert": false,
-        "max": 100.0,
-        "min": 0.0,
-        "n": 363
-      },
-      "s_pf_pct": {
-        "distinct": 270,
-        "inert": false,
-        "max": 100.0,
-        "min": 0.0,
-        "n": 363
-      },
-      "s_raw": {
-        "distinct": 136,
-        "inert": false,
-        "max": 63.581973,
-        "min": 0.0,
-        "n": 363
-      },
-      "s_sharpe": {
-        "distinct": 161,
-        "inert": false,
-        "max": 99.678547,
-        "min": 0.0,
-        "n": 363
-      },
-      "s_smoothness": {
         "distinct": 2,
         "inert": false,
-        "max": 25.0,
+        "max": 200.0,
+        "min": 50.0,
+        "n": 604
+      },
+      "s_pf": {
+        "distinct": 143,
+        "inert": false,
+        "max": 100.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
+      },
+      "s_pf_pct": {
+        "distinct": 394,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 607
+      },
+      "s_raw": {
+        "distinct": 505,
+        "inert": false,
+        "max": 84.568194,
+        "min": 0.0,
+        "n": 607
+      },
+      "s_sharpe": {
+        "distinct": 239,
+        "inert": false,
+        "max": 100.0,
+        "min": 0.0,
+        "n": 607
+      },
+      "s_smoothness": {
+        "distinct": 1,
+        "inert": true,
+        "max": 0.0,
+        "min": 0.0,
+        "n": 8
       },
       "s_sortino": {
-        "distinct": 115,
+        "distinct": 192,
         "inert": false,
         "max": 100.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "s_stability": {
-        "distinct": 328,
+        "distinct": 476,
         "inert": false,
-        "max": 99.953472,
+        "max": 100.0,
         "min": 25.0,
-        "n": 363
+        "n": 607
       },
       "s_vol": {
-        "distinct": 122,
+        "distinct": 357,
         "inert": false,
         "max": 100.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "s_winrate": {
-        "distinct": 346,
+        "distinct": 555,
         "inert": false,
-        "max": 89.189189,
+        "max": 98.630137,
         "min": 0.0,
-        "n": 363
+        "n": 607
       },
       "sf": {
-        "distinct": 120,
+        "distinct": 394,
         "inert": false,
         "max": 1.0,
         "min": 0.0,
-        "n": 363
+        "n": 607
       }
     },
     "inert_components": [
-      "s_mc"
+      "s_mc",
+      "s_smoothness"
     ],
     "inert_weight": 0.0,
     "note": "inert means max == min across the served population: the component carries weight and ranks nobody. Weight is matched by stripping the s_ prefix, so components whose weight key differs are reported with weight 0 and should be read from scorer.components.",
@@ -131,7 +132,7 @@
       "gmx",
       "scalper"
     ],
-    "scored_addresses_examined": 363
+    "scored_addresses_examined": 607
   },
   "contract": {
     "INITIAL_SCORE": 300,
@@ -214,7 +215,7 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": null
   },
-  "generated_at": "2026-10-09T17:08:08.014202+00:00",
+  "generated_at": "2026-10-09T18:29:42.273083+00:00",
   "generator": {
     "blob": "b36c42b98aae087d388003ac92fccd8431466106",
     "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
@@ -239,14 +240,14 @@
         }
       },
       "YAAF": {
-        "addresses": 363,
+        "addresses": 607,
         "by_scorer_version": {
-          "5.0.0-FORMAL": 363
+          "5.0.0-FORMAL": 8,
+          "5.6.0-FORMAL": 599
         },
         "by_stage": {
-          "EXPERIMENTAL": 313,
-          "PROMISING": 41,
-          "VERIFIED": 9
+          "EXPERIMENTAL": 488,
+          "PROMISING": 119
         }
       },
       "unclassified_profile": {
@@ -570,11 +571,11 @@
       "inputs_manifest_sha256": "b98fcde64a17022c9c5cc9d89dae79bcf3ba44d3c5beb44d92788e453d086a96",
       "read_before_use": "IC_PROTOCOL_v2.md carries a dated addendum: the universe was selected on dollar PnL over a window inside the forward period. No figure from this run is a population estimate.",
       "served_coverage": {
-        "absent_from_served_db": 118,
+        "absent_from_served_db": 0,
         "measured_by_canonical_run": 152,
-        "present_in_served_db": 34,
+        "present_in_served_db": 152,
         "profiles_of_those_present": {
-          "gmx": 34
+          "gmx": 152
         },
         "why_this_matters": "the published correlation describes the measured population; the API serves the present one. The two are not the same set and both are public."
       }
@@ -584,7 +585,7 @@
     "o literal de is_eligible nao casou o padrao no scorer; campo nulo"
   ],
   "population": {
-    "addresses_total": 541,
+    "addresses_total": 785,
     "by_profile_and_scorer_version": [
       {
         "addrs": 303,
@@ -597,21 +598,39 @@
       },
       {
         "addrs": 98,
-        "latest_ts": "2026-10-09 03:07:22",
+        "latest_ts": "2026-10-09 17:43:32",
         "max_s_raw": 697.42,
         "min_s_raw": 184.72,
         "profile": "hedger",
-        "rows_n": 1584,
+        "rows_n": 1679,
         "v": "(no version)"
       },
       {
         "addrs": 69,
-        "latest_ts": "2026-10-09 03:07:22",
+        "latest_ts": "2026-10-09 17:43:32",
         "max_s_raw": 801.65,
         "min_s_raw": 309.28,
         "profile": "market_maker",
-        "rows_n": 1362,
+        "rows_n": 1431,
         "v": "(no version)"
+      },
+      {
+        "addrs": 302,
+        "latest_ts": "2026-10-09 17:43:13",
+        "max_s_raw": 84.5682,
+        "min_s_raw": 0.0,
+        "profile": "gmx",
+        "rows_n": 302,
+        "v": "5.6.0-FORMAL"
+      },
+      {
+        "addrs": 297,
+        "latest_ts": "2026-10-09 17:43:32",
+        "max_s_raw": 70.6556,
+        "min_s_raw": 0.0,
+        "profile": "directional",
+        "rows_n": 297,
+        "v": "5.6.0-FORMAL"
       },
       {
         "addrs": 60,
@@ -651,10 +670,10 @@
       }
     ],
     "caveat": "profile classifies the agent, score_version identifies the engine that produced the row; they are not the same axis and rows exist where they disagree.",
-    "rows_total": 8291,
+    "rows_total": 9054,
     "source": "observatory.db / yaaf_scores"
   },
-  "provenance_clean": false,
+  "provenance_clean": true,
   "registry": {
     "enumerated_at": "2026-10-08T22:19:42.623751+00:00",
     "is_eligible": 0,
@@ -824,13 +843,13 @@
       "DD_PEN_WEIGHT": 0.2
     },
     "provenance": {
-      "blob": "00368bfb1ef0dd9d429f7fc2df43ff6f883ffef2",
-      "commit": "c294dd62ed43306ef4c29b2541066ef9d42d3edc",
-      "commit_date": "2026-10-09 16:54:55 +0000",
+      "blob": "27f37f76bbcfec3419a6b4e580e4db8afe408039",
+      "commit": "9d681fd81f5aac1f16d59e409a387c0a73c4ba3d",
+      "commit_date": "2026-10-09 17:08:08 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
       "sha256": "9d22e9eed2aae24cbf6051f0d7eed7020aa1225dac714027b1673d6b45f5c99d",
       "tracked": true,
-      "uncommitted_changes": true
+      "uncommitted_changes": false
     },
     "sistema": {
       "CF_N_STAR": 250,
@@ -850,7 +869,5 @@
     "version": "5.6.0-FORMAL",
     "w_sum": 1.0
   },
-  "uncommitted": [
-    "scorer/yaaf_score_v5_formal.py"
-  ]
+  "uncommitted": []
 }
