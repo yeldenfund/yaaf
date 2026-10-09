@@ -214,7 +214,7 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": 400.0
   },
-  "generated_at": "2026-10-09T16:15:32.502800+00:00",
+  "generated_at": "2026-10-09T16:54:55.445952+00:00",
   "generator": {
     "blob": "b36c42b98aae087d388003ac92fccd8431466106",
     "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
@@ -718,6 +718,7 @@
     "caps": {
       "CAP_AVG_R": 1.5,
       "CAP_CALMAR": 4.0,
+      "CAP_DD": 20.0,
       "CAP_EXPECT": 0.6,
       "CAP_PF": 2.5,
       "CAP_SHARPE": 2.5,
@@ -747,7 +748,7 @@
           "matches_canonical": true,
           "path": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
           "resolves_to": null,
-          "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489"
+          "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a"
         },
         {
           "canonical": false,
@@ -756,7 +757,7 @@
           "matches_canonical": true,
           "path": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py",
           "resolves_to": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
-          "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489"
+          "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a"
         }
       ],
       "copy_count": 2,
@@ -821,11 +822,11 @@
       "DD_PEN_WEIGHT": 0.2
     },
     "provenance": {
-      "blob": "b884142fcc7b5ea8355b2931370f7a86761f3a32",
-      "commit": "216bcb2b7f8d47f1444e758798298506323cd16b",
-      "commit_date": "2026-10-09 15:07:08 +0000",
+      "blob": "29b646250614709c1c9dbb290adc91068455d930",
+      "commit": "310fb6d9b36ad5d9bc82eb0ed79c559f97bc2e5b",
+      "commit_date": "2026-10-09 16:15:32 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
-      "sha256": "4f2d40c671b2a91f85f26772777cd771213c096fd00f9909624e347c3a791489",
+      "sha256": "eab2558b4bf37156ca21b568b5ca0d319fdd98275cb7804b00894acbf955502a",
       "tracked": true,
       "uncommitted_changes": true
     },
@@ -844,7 +845,7 @@
       "PROMISING": 200,
       "VERIFIED": 500
     },
-    "version": "5.3.0-FORMAL",
+    "version": "5.5.0-FORMAL",
     "w_sum": 0.81
   },
   "uncommitted": [

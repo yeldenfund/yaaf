@@ -12,7 +12,7 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.3.0-FORMAL"
+VERSION_SCORE = "5.5.0-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
@@ -45,6 +45,10 @@ STAKE_FLOORS_USDC = {
 CVAR_PEN_SCALE = 15.0
 CVAR_CAP       = 2.0
 DD_PEN_WEIGHT  = 0.20
+# v5.5.0. Teto da penalidade de drawdown, em R. De convencao -- vinte unidades
+# de risco perdidas do pico -- e nao de percentil desta populacao, que e
+# selecionada pelo desfecho. Acima disto a perda nao muda mais o veredito.
+CAP_DD         = 20.0
 
 EMA_ALPHA      = 0.85
 EMA_INITIAL    = 300.0
@@ -201,7 +205,17 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     avg_r     = finite(metrics.get("avg_r"))
     vol_r     = finite(metrics.get("vol_r"))
     stability = clamp(finite(metrics.get("stability"), 0.5), 0.0, 1.0)
-    max_dd    = max(finite(metrics.get("max_dd_pct")), 0.0)
+    # v5.5.0. A chave e max_dd_r: o valor e o drawdown da curva de R
+    # acumulado, verificado por aritmetica contra payload real. max_dd_pct
+    # segue sendo lida como legado em R, porque os 500 payloads selados a
+    # carregam e reescreve-los quebraria o manifesto. A precedencia nao fica
+    # implicita: qual chave foi lida vai para o resultado.
+    if metrics.get("max_dd_r") is not None:
+        max_dd = max(finite(metrics.get("max_dd_r")), 0.0)
+        max_dd_source = "max_dd_r"
+    else:
+        max_dd = max(finite(metrics.get("max_dd_pct")), 0.0)
+        max_dd_source = "max_dd_pct (legado, lido em R)"
     pf_pct    = clamp(finite(metrics.get("pf_pct"), 50.0), 0.0, 100.0)
 
     skew = finite(metrics.get("skew"), 0.0)
@@ -244,7 +258,11 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     # quando os 5% piores trades sao lucrativos, entao a penalidade virava bonus
     # sem teto. Medido: +30.0000 pontos com cvar_95 = -4. O dd_pen ja tinha piso.
     cvar_pen = clamp(cvar_95 / CVAR_CAP, 0.0, 1.0) * CVAR_PEN_SCALE
-    dd_pen   = max_dd * DD_PEN_WEIGHT
+    # v5.5.0. Com teto. Sem ele a penalidade e dominada pela cauda: p99 de
+    # 136 R custa 27 pontos e 281 R custa 56, contra S_RAW medio de 26 nesta
+    # populacao, o que empurra a cauda inteira para o piso -- e no piso os
+    # agentes empatam, o que e perda de ordenacao, nao medida de risco.
+    dd_pen   = min(max_dd, CAP_DD) * DD_PEN_WEIGHT
 
     if assessable:
         core = (
@@ -298,6 +316,7 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
         "s_vol": s_vol, "s_stability": s_stability,
         "s_pf_pct": s_pf_pct, "psr": psr, "psr_n_obs": n_trades, "psr_n_trials": n_trials,
         "cvar_95": cvar_95, "cvar_pen": cvar_pen, "dd_penalty": dd_pen,
+        "max_dd_r": max_dd, "max_dd_source": max_dd_source, "cap_dd": CAP_DD,
         "assessable": assessable, "gate": gate,
         "s_raw": s_raw, "ema_prev": ema_prev, "ema_new": ema_new,
         "cf": cf, "sf": sf, "sistema": sistema, "stage": stage_name,
