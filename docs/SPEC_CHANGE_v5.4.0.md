@@ -87,4 +87,16 @@ Every level-based number changes: band, `isEligible`, the fee. The counts
 produced by the calibrated weights become historical, and every published
 count must name the version that produced it.
 
-**Measured effect:** (pending the deliberate re-score)
+**Measured effect:** measured before the patch rather than after, and
+deliberately so. The isolated effect of a weight change is a rank comparison on
+a fixed population, which the re-score cannot provide because it moved five
+things at once.
+
+Over the 302 GMX agents: Spearman rho 0.9944 against the calibrated weights,
+with 18 of the top 20 preserved. The two that leave the top 20 leave because of
+this change and not because of any drawdown treatment - the same simulation
+separates the two, and finds the drawdown contributes at most 0.006 of rho under
+any treatment tested. Method in `docs/evidence/sim_weights_dd.py`.
+
+The population table in `RESCORE_20261009.md` measures the net of five changes.
+It is not this change's effect and must not be quoted as such.

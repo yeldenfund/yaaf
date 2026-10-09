@@ -98,7 +98,17 @@ Both effects push down. Every published count must name the version that
 produced it, and the counts produced by 5.0.0 become historical rather than
 wrong — they were the output of the specification in force at the time.
 
-**Measured effect:** (pending the deliberate re-score)
+**Measured effect:** isolable, because `total_trades` is the only quantity this
+change touches. In the re-score of 2026-10-09 the sum over `yaaf_state` fell
+from 3,671,818 to 278,839, and the per-address mean from 9,249 to 435 - a factor
+of 21. The row count rose from 397 to 641 in the same run, so the population is
+not held constant; the per-address mean is the comparable figure, and it is the
+one accumulation inflated. The full table is in `RESCORE_20261009.md`.
+
+The 83.5x figure that this document's dated correction retracts is **not**
+replaced by the 21x above. That figure divided GMX payload trades by a sum taken
+over two populations; no arithmetic on those same quantities would have produced
+a right answer, so the relation between the two numbers is not a refinement.
 
 > **Read the correction at the end of this file before using any figure above.**
 > The effect sizes in the sections above were overstated and are retracted

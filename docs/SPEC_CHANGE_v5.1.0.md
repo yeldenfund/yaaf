@@ -96,8 +96,25 @@ failed.
 That count is the declared effect of this change and goes here, dated, after the
 re-score. Until then this document states the decision and not its consequence.
 
-> **Measured effect:** *(pending the deliberate re-score — see the EMA boundary
-> below)*
+> **Measured effect:** **not measurable, permanently.**
+>
+> Verified on 2026-10-09 against the stored records rather than assumed: across
+> all 5,345 rows that `5.0.0-FORMAL` produced, over 397 addresses, the payload
+> carries neither `gate` nor `assessable`. Both are absent, not false. The two
+> fields were added by a later scorer version, so pairing a pre-change record
+> with a post-change one cannot say whether an agent was held out by the Volume
+> Axiom, by another gate, or by nothing at all.
+>
+> This document's original claim was therefore right, and it was doubted here on
+> the strength of seeing `gate` and `assessable` in a `5.6.0-FORMAL` payload —
+> the schema of one population inferred from a sample of another. The check cost
+> one query and the claim stood.
+>
+> The rule this leaves is worth more than the lost count: **a gate must be made
+> to record what it excludes before it is removed.** Afterwards the question is
+> unanswerable for the population that lived under it. Removing the instrument
+> and then asking what it measured is not a measurement problem, it is a
+> sequencing one.
 
 ## Interaction with the re-score
 

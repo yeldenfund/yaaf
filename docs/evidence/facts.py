@@ -404,7 +404,20 @@ def main():
     m = re.search(r"is_eligible\s*=\s*sistema\s*>=\s*([\d.]+)", src)
     limiar_scorer = float(m.group(1)) if m else None
     if m is None:
-        nota("o literal de is_eligible nao casou o padrao no scorer; campo nulo")
+        # Distingue REMOCAO de FALHA DE LEITURA. v5.6.0 tirou o campo de
+        # proposito, porque o limiar que governa e o do contrato. A nota
+        # anterior culpava o padrao, e quem lesse o facts.json daqui a um mes
+        # concluiria que o parsing quebrou. Um nulo com a causa errada e pior
+        # que um nulo.
+        if "is_eligible" not in src:
+            nota("o scorer nao emite is_eligible desde 5.6.0, de proposito: o "
+                 "limiar que governa e SCORE_THRESHOLD_ACTIVE, do contrato. "
+                 "Campo nulo porque nao ha mais o que comparar, e nao por "
+                 "falha de leitura")
+        else:
+            nota("is_eligible aparece no scorer mas nao na forma "
+                 "`sistema >= <numero>`: campo nulo por falha de leitura, e "
+                 "isto merece olhar")
 
     scorer = {
         "version": sc.VERSION_SCORE,

@@ -165,4 +165,12 @@ records a difference of +0.0000 between `cvar_95 = 0` and `cvar_95 = −4`, whic
 suggests it may be inert at current values. **Not measured.** It deserves
 exactly this analysis and is not folded into it.
 
-**Measured effect:** (pending the deliberate re-score)
+**Measured effect:** measured before the patch, for the same reason as
+v5.4.0. Over the 302 GMX agents the cap's benefit is the floor rather than the
+ranking: agents pinned at `S_RAW = 0` by the drawdown tail fell from 11 to 6,
+while the drawdown's contribution to Spearman rho is at most 0.006 under any
+treatment tested. Method in `docs/evidence/sim_dd_cap.py`.
+
+The ranking being nearly untouched is the point, not a disappointment: the cap
+was adopted to stop a tail from flooring an otherwise assessable agent, not to
+reorder anyone.

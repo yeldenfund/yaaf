@@ -94,4 +94,20 @@ unfiltered count, `T` and the series diverge again — in the same way, for the
 same reason, and invisibly. `psr_n_obs` is in the output so that divergence is
 at least auditable.
 
-**Measured effect:** (pending the deliberate re-score)
+**Measured effect:** **not measured.** The re-score moved the population under
+five changes at once, with effects of opposite sign, and attributing that net to
+this one would repeat exactly the error the dated correction in
+`SPEC_CHANGE_v5.2.0.md` retracts: a quantity computed over an aggregate and
+asserted as the effect of one part of it.
+
+`test_saturation.py` cannot supply it either, and the reason is worth recording
+because it was found the hard way. Every case in that test sits where `psr`
+saturates at 1.0, so the test is blind to this change. It was predicted to move
+when v5.3.0 landed and it did not; had that prediction been acted on literally, a
+correct patch would have been reverted on the strength of a test that could not
+see it.
+
+What would measure it: recompute `psr` over the same payloads under both
+denominators - T = trading days, as before D5/D6, and T = n_trades, as now - and
+report the distribution of the difference, with the saturated cases counted
+separately so they cannot hide the rest. Owed, and small.
