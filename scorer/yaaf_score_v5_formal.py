@@ -12,7 +12,7 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.0.2-FORMAL"
+VERSION_SCORE = "5.1.0-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
@@ -81,6 +81,15 @@ def stage(score):
 
 
 def volume_axiom_ok(trades, initial_balance, floor_frac=VOLUME_FLOOR_FRAC):
+    """NAO APLICADO desde a v5.1.0. Mantido para que a regra da especificacao
+    continue verificavel, nao porque o portao a use.
+
+    O criterio e um piso em dolar: media(|pnl|) >= initial_balance * floor_frac,
+    com initial_balance fixo em 11000.0 para todo agente. Media de PnL absoluto
+    acima de onze dolares. Isso exclui agentes pequenos, nao agentes ruins —
+    media de 363 agentes servidos, 165 reprovados no portao, entre eles um com
+    72.545 trades acumulados. Ver docs/SPEC_CHANGE_v5.1.0.md.
+    """
     if not trades or initial_balance <= 0:
         return False
     abs_pnls = [abs(finite(t.get("pnl", 0.0))) for t in trades]
@@ -177,13 +186,13 @@ def compute_market_correlation(trades, df_market):
 
 
 def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=1):
+    # v5.1.0: o portao de avaliabilidade e o piso de trades, e so ele. O Axioma
+    # de Volume saiu — ver docs/SPEC_CHANGE_v5.1.0.md. O parametro initial_balance
+    # permanece na assinatura, sem uso, porque o ic_test_gmx_v2.py o passa e aquele
+    # script e evidencia commitada.
     n_trades = int(metrics.get("trades", 0))
-    if n_trades < MIN_TRADES_SRAW:
-        vol_ok = False
-    else:
-        vol_ok = True
-        if trades is not None:
-            vol_ok = volume_axiom_ok(trades, initial_balance)
+    assessable = n_trades >= MIN_TRADES_SRAW
+    gate = None if assessable else "min_trades"
 
     sharpe    = finite(metrics.get("sharpe_r"))
     sortino   = finite(metrics.get("sortino_r"))
@@ -233,7 +242,7 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     cvar_pen = clamp(cvar_95 / CVAR_CAP, 0.0, 1.0) * CVAR_PEN_SCALE
     dd_pen   = max_dd * DD_PEN_WEIGHT
 
-    if n_trades >= MIN_TRADES_SRAW and vol_ok:
+    if assessable:
         core = (
             s_sharpe_dsr * W["sharpe_dsr"] + s_sortino * W["sortino"]
             + s_winrate * W["winrate"] + s_pf * W["pf"]
@@ -279,7 +288,8 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
         "s_vol": s_vol, "s_stability": s_stability,
         "s_pf_pct": s_pf_pct, "dsr": dsr,
         "cvar_95": cvar_95, "cvar_pen": cvar_pen, "dd_penalty": dd_pen,
-        "volume_ok": vol_ok, "s_raw": s_raw, "ema_prev": ema_prev, "ema_new": ema_new,
+        "assessable": assessable, "gate": gate,
+        "s_raw": s_raw, "ema_prev": ema_prev, "ema_new": ema_new,
         "cf": cf, "sf": sf, "sistema": sistema, "stage": stage_name,
         "score_version": VERSION_SCORE,
         "new_state": {

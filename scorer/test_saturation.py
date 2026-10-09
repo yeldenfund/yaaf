@@ -120,6 +120,23 @@ def main():
     else:
         print("   -> sem efeito: o CVaR esta com piso, ou o clamp final absorveu.")
 
+    # ---------- D ----------
+    print("\nD. PORTAO  (30 trades, PnL medio 2 dolares)")
+    md = metricas(smoothness=0.0, s_mc=50.0, fator=0.5)
+    md["trades"] = 30
+    trades_pequenos = [{"pnl": 2.0, "r_multiple": 0.25,
+                        "exit_time": f"2026-08-{(i % 28) + 1:02d}T12:00:00+00:00"}
+                       for i in range(30)]
+    d = yelden_score(md, dict(ESTADO), trades=trades_pequenos, initial_balance=11000.0)
+    print(f"   S_RAW {d['s_raw']:.4f}   assessable={d.get('assessable', '(campo ausente)')}"
+          f"   gate={d.get('gate', '(campo ausente)')}"
+          f"   volume_ok={d.get('volume_ok', '(removido)')}")
+    if d["s_raw"] > TOL:
+        print("   -> avaliado. O Axioma de Volume nao esta barrando (v5.1.0).")
+    else:
+        print("   -> S_RAW zero. O Axioma de Volume ainda barra: media(|pnl|)=2.0 contra")
+        print("      o piso de 11.0 (initial_balance 11000 x VOLUME_FLOOR_FRAC 0.001).")
+
     print(f"\nestado do scorer: {estado}")
     return 0 if estado == "POS-EMENDA" else (1 if estado == "PRE-EMENDA" else 2)
 
