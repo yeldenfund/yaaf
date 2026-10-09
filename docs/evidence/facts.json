@@ -141,18 +141,6 @@
     "WARNING_SLASH_PCT": 10,
     "address": "0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E",
     "isEligible_is_a_conjunction": true,
-    "onchain": {
-      "address": "0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E",
-      "minStake": 50000000000000000000,
-      "monthlyFee": 1000000000000000000,
-      "read_at": "2026-10-09T03:33:49.883659+00:00",
-      "rpc": "https://polygon-bor-rpc.publicnode.com",
-      "totalActive": 2,
-      "totalAgents": 2,
-      "totalBurned": 0,
-      "totalRegistered": 2,
-      "totalSlashed": 0
-    },
     "source": {
       "blob": "f3bcc9d7fce3029079631bfdc41bdc6f6d2e62e7",
       "commit": "dba5f7ee3d46d104b12a9a61c502eaf3e0107a27",
@@ -226,13 +214,13 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": 400.0
   },
-  "generated_at": "2026-10-09T03:33:51.938246+00:00",
+  "generated_at": "2026-10-09T13:34:03.520350+00:00",
   "generator": {
-    "blob": "HEAD:scorer/facts.py",
+    "blob": "HEAD:docs/evidence/facts.py",
     "commit": null,
     "commit_date": null,
-    "path": "scorer/facts.py",
-    "sha256": "b74e53e8b95cdcac53e692702193f8153c8b05bbe4ea7911fe2afff2d5952fa8",
+    "path": "docs/evidence/facts.py",
+    "sha256": "6b7aa9e00314dcde811d6c1fffc78439a0afd7fc1c661766077dba9f3d7530a4",
     "tracked": true,
     "uncommitted_changes": true
   },
@@ -748,6 +736,76 @@
       "vol": 0.05,
       "winrate": 0.08
     },
+    "copies": {
+      "agree": true,
+      "canonical": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
+      "copies": [
+        {
+          "canonical": true,
+          "dangling": false,
+          "is_symlink": false,
+          "matches_canonical": true,
+          "path": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
+          "resolves_to": null,
+          "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded"
+        },
+        {
+          "canonical": false,
+          "dangling": false,
+          "is_symlink": true,
+          "matches_canonical": true,
+          "path": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py",
+          "resolves_to": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
+          "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded"
+        }
+      ],
+      "copy_count": 2,
+      "importer_count": 8,
+      "importers": [
+        {
+          "inserts_own_dir_on_path": false,
+          "path": "/root/yaaf/scorer/facts.py",
+          "sibling_copy": "/root/yaaf/scorer/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": false,
+          "path": "/root/yaaf/scorer/test_saturation.py",
+          "sibling_copy": "/root/yaaf/scorer/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": true,
+          "path": "/root/aiagentregistry-observatory/emit_yaaf.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": true,
+          "path": "/root/aiagentregistry-observatory/emit_yaaf_final.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": true,
+          "path": "/root/aiagentregistry-observatory/emit_yaaf_gmx.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": false,
+          "path": "/root/aiagentregistry-observatory/ic_test_gmx_multi.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": false,
+          "path": "/root/aiagentregistry-observatory/test_consistency.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        },
+        {
+          "inserts_own_dir_on_path": true,
+          "path": "/root/aiagentregistry-observatory/test_consistency_hl.py",
+          "sibling_copy": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py"
+        }
+      ],
+      "note": "A symlink cannot drift from its target, so copies that are links are not a version hazard: real_file_count is the number that can. real_file_count > 1 means two independent files, nothing enforcing their equality, and a patch applied to the canonical one alone leaves every importer whose own directory holds a sibling file on the old version, silently. agree=false means the scores being served and the scorer being declared are not the same code. A dangling link, or a link to an absolute path outside the repository, breaks on any clone of it.",
+      "real_file_count": 1
+    },
     "fee_model": {
       "FEE_BASE_RATE_USDC": 10.0,
       "formula": "FEE_BASE_RATE_USDC * (1000 - sistema) / 1000"
@@ -763,11 +821,11 @@
       "DD_PEN_WEIGHT": 0.2
     },
     "provenance": {
-      "blob": "27aed464683af52924a677afe04e9599e216ec96",
-      "commit": "764d26a2f374b0e19720212f7276825f8b4a9796",
-      "commit_date": "2026-10-09 03:08:52 +0000",
+      "blob": "ee3a607128bf4749245802e95738e2f89e100523",
+      "commit": "0ae1704401dcedea78a635efd354571132c04842",
+      "commit_date": "2026-10-09 03:53:55 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
-      "sha256": "cfd8a78d0e3f4213d6b983a701be6cbb394f94a282823f1ff5b468b4279d198d",
+      "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded",
       "tracked": true,
       "uncommitted_changes": false
     },
@@ -786,10 +844,10 @@
       "PROMISING": 200,
       "VERIFIED": 500
     },
-    "version": "5.0.2-FORMAL",
+    "version": "5.1.0-FORMAL",
     "w_sum": 0.81
   },
   "uncommitted": [
-    "scorer/facts.py"
+    "docs/evidence/facts.py"
   ]
 }
