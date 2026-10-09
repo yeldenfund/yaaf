@@ -1,0 +1,62 @@
+{
+  "proveniencia": {
+    "protocolo_blob": "72d5bebd8e5347b64778a550f6f114091ddfb2c6",
+    "protocolo_commit": "e3cc4e0eea8728b91c9236e6e42bf137feb03e71",
+    "protocolo_commit_data": "2026-10-08 22:08:32 +0000",
+    "corte_iso": "2026-08-20T00:00:00+00:00",
+    "corte_ts": 1787184000,
+    "registry": "0xC6Aef54A0ea6AbFcC9fe61154b9b357E0DDF113E",
+    "executado_em": "2026-10-08T22:19:42.623751+00:00",
+    "rpc": "https://polygon-bor-rpc.publicnode.com"
+  },
+  "total_agents": 2,
+  "limiar": 500,
+  "por_status": {
+    "ACTIVE": 2
+  },
+  "pre_corte": 2,
+  "score_acima_do_limiar": 0,
+  "is_eligible": 0,
+  "logs": {
+    "AgentRegistered": null,
+    "AgentSlashed": null
+  },
+  "agentes": [
+    {
+      "addr": "0x84d00C78866A98CC2c7f985bdbF4871c552fF986",
+      "name": "Agent Bachelier",
+      "agent_type": "trading",
+      "stake": 50000000000000000000,
+      "score": 267,
+      "status": 2,
+      "registered_at": 1775356811,
+      "approved_at": 1775356827,
+      "last_score_update": 1791382615,
+      "last_fee_collection": 1775356827,
+      "warning_count": 0,
+      "slash_pending": false,
+      "status_nome": "ACTIVE",
+      "registered_at_iso": "2026-04-05T02:40:11+00:00",
+      "pre_corte": true,
+      "is_eligible_agora": false
+    },
+    {
+      "addr": "0x4787ceE133992f96c240e0C4Fa75E99EC7879fac",
+      "name": "Markowitz Bot",
+      "agent_type": "trading",
+      "stake": 50000000000000000000,
+      "score": 50,
+      "status": 2,
+      "registered_at": 1775360291,
+      "approved_at": 1775360303,
+      "last_score_update": 1788861628,
+      "last_fee_collection": 1775360303,
+      "warning_count": 0,
+      "slash_pending": false,
+      "status_nome": "ACTIVE",
+      "registered_at_iso": "2026-04-05T03:38:11+00:00",
+      "pre_corte": true,
+      "is_eligible_agora": false
+    }
+  ]
+}
