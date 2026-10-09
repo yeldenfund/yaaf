@@ -12,7 +12,7 @@ import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 
-VERSION_SCORE = "5.1.0-FORMAL"
+VERSION_SCORE = "5.2.0-FORMAL"
 
 W = {
     "sharpe_dsr": 0.14, "sortino": 0.07, "winrate": 0.08, "pf": 0.10,
@@ -256,7 +256,13 @@ def yelden_score(metrics, state, trades=None, initial_balance=11000.0, n_trials=
     ema_prev = finite(state.get("ema"), EMA_INITIAL)
     ema_new  = clamp(ema_prev * EMA_ALPHA + (s_raw * 10.0) * (1.0 - EMA_ALPHA), 0.0, 1000.0)
 
-    cum_trades = int(state.get("total_trades", 0)) + n_trades
+    # D11. O scorer recebe uma OBSERVACAO, nao um delta. Somar aqui assumia
+    # que o chamador entrega trades novos a cada chamada; com payloads que sao
+    # snapshot do historico inteiro, isso contava o mesmo historico de novo a
+    # cada rodada — 83,5x o declarado, em producao, pregando cf em 1,0 para a
+    # populacao toda. Acumular, quando for o caso, e de quem le os arquivos e
+    # sabe se sao snapshot ou delta; o scorer nao tem como distinguir.
+    cum_trades = n_trades
     cf = min(math.sqrt(max(cum_trades, 0) / CF_N_STAR), 1.0)
 
     history = list(state.get("round_history", []))

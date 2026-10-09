@@ -214,15 +214,15 @@
     "note": "the scorer duplicates a predicate the contract already decides; a duplicated predicate drifts, and this field exists so the drift is data rather than something a reader has to notice.",
     "scorer_threshold": 400.0
   },
-  "generated_at": "2026-10-09T13:34:03.520350+00:00",
+  "generated_at": "2026-10-09T15:07:08.307610+00:00",
   "generator": {
-    "blob": "HEAD:docs/evidence/facts.py",
-    "commit": null,
-    "commit_date": null,
+    "blob": "b36c42b98aae087d388003ac92fccd8431466106",
+    "commit": "8c8021bd6778565d2df458f202bdf0b574fd95e0",
+    "commit_date": "2026-10-09 13:35:18 +0000",
     "path": "docs/evidence/facts.py",
     "sha256": "6b7aa9e00314dcde811d6c1fffc78439a0afd7fc1c661766077dba9f3d7530a4",
     "tracked": true,
-    "uncommitted_changes": true
+    "uncommitted_changes": false
   },
   "latest_per_address": {
     "by_engine": {
@@ -747,7 +747,7 @@
           "matches_canonical": true,
           "path": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
           "resolves_to": null,
-          "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded"
+          "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a"
         },
         {
           "canonical": false,
@@ -756,7 +756,7 @@
           "matches_canonical": true,
           "path": "/root/aiagentregistry-observatory/yaaf_score_v5_formal.py",
           "resolves_to": "/root/yaaf/scorer/yaaf_score_v5_formal.py",
-          "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded"
+          "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a"
         }
       ],
       "copy_count": 2,
@@ -825,9 +825,9 @@
       "commit": "0ae1704401dcedea78a635efd354571132c04842",
       "commit_date": "2026-10-09 03:53:55 +0000",
       "path": "scorer/yaaf_score_v5_formal.py",
-      "sha256": "0d976082baec57dbe3b2f4508a0460670d5699e9eecc70623f3e4a5c0604aded",
+      "sha256": "a4884c9beb2a99b59a45a64424556dab3fa272218199487e122e90acd1ecbb9a",
       "tracked": true,
-      "uncommitted_changes": false
+      "uncommitted_changes": true
     },
     "sistema": {
       "CF_N_STAR": 250,
@@ -844,10 +844,10 @@
       "PROMISING": 200,
       "VERIFIED": 500
     },
-    "version": "5.1.0-FORMAL",
+    "version": "5.2.0-FORMAL",
     "w_sum": 0.81
   },
   "uncommitted": [
-    "docs/evidence/facts.py"
+    "scorer/yaaf_score_v5_formal.py"
   ]
 }
