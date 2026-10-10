@@ -1,7 +1,8 @@
 # D12 — Records served as current after their basis is gone
 
-Status: **finding, with a rule proposed and not adopted.** The defect is
-measured; the rule is a specification decision and is left open deliberately.
+Status: **adopted 2026-10-09, and not as either option offered below.**
+The decision was narrow for *withholding* and marking for the rest, which is a
+third line the first draft of this document did not offer.
 
 Date: 2026-10-09. Found while verifying the coverage of the re-score, not while
 looking for it.
@@ -104,7 +105,54 @@ list and are never re-collected** — while being re-scored four times a day unt
 Causes A and B are both symptoms of this. An unmaintained payload can vanish, or
 can carry a classification from a collection that will never be repeated.
 
-## Proposed rule, not adopted
+## Adopted 2026-10-09
+
+The rule as implemented, in `scores_api.py`:
+
+> A served record is the agent's current figure only while its basis still
+> exists.
+
+**Cause A, no payload at all — withheld.** Out of the score listing, out of
+`/agents`, and out of every aggregate count. Not out of a direct lookup:
+`/scores/<address>` still returns the record carrying `basis: "absent"` and the
+reason. Someone who knows the address and receives a 404 is left without the
+figure *and* without the explanation, which is worse than receiving both.
+
+**Cause B, payload present but not scorable under the current specification —
+marked, not withheld.** Served with `basis: "stale"`, `is_current: false` and a
+note. The reasoning is the one that decided it: hiding an agent because a rate
+limit spoiled its last collection makes the agent pay for a failure of the
+collector. The fault is the observatory's and the cost would land on the agent.
+
+**The marking does not claim to know which cause applies to B.** Telling "the
+current specification declines this payload" from "it has not been re-scored
+since" would mean reading all 607 payloads from disk on every request. The note
+states both possibilities and chooses neither, which is the same treatment this
+API already gives the two eligibility thresholds and the scorer-version lag:
+when two readings are possible, publish both and say so.
+
+**Published counts:** `records_withheld_no_payload` and `records_marked_stale`
+sit beside `scored_addresses`, so the population does not shrink in silence.
+Measured effect on adoption: `scored_addresses` 607 to 605, the lag's record
+count 8 to 6, `eligible` unchanged — the two withheld carried `sistema` 114.36
+and 186.16, so neither cleared the threshold and no eligibility figure moves.
+
+**One failure mode is guarded explicitly.** The `absent` classification comes
+from a directory listing. An unmounted, missing or unreadable payload directory
+yields an empty index, and an empty index would classify every record as absent
+and hide the entire population from a public API. An empty index therefore means
+"unknown" and classifies nothing. The test for it is in the patch's acceptance
+run, not left to inspection.
+
+Either rule belongs in the API, not the emits. The emits are doing the right
+thing by declining to score what they cannot score; the error was in serving the
+previous answer as though nothing had changed.
+
+### What the two options below would have done
+
+They are kept because the reasoning that rejected them is part of the decision.
+
+
 
 > A record whose basis is absent is not current. The API should not serve it as
 > the agent's current figure, and should say which records it is withholding and
@@ -126,9 +174,8 @@ rate limit spoiled its last collection. That is a real loss of information, and
 whether it is better than publishing a superseded figure is a judgement about
 what the registry is for, not something the data decides.
 
-Either rule belongs in the API, not the emits. The emits are doing the right
-thing by declining to score what they cannot score; the error is in serving the
-previous answer as though nothing had changed.
+Both are superseded by the adopted rule above: the narrow one for withholding,
+with marking in place of the wide one's withholding.
 
 ## Owed either way, independent of the rule
 

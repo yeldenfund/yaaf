@@ -50,3 +50,4 @@ yelden_state.json
 agent_data.json
 scorer/*.pre-v*
 scorer/__pycache__/
+docs/evidence/steady_state.json
