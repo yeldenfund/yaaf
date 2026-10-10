@@ -44,6 +44,39 @@ them. The system has been audited against a claim it does not make.
 
 **3. Failures of durability.** This is the newest and the worst. Below.
 
+**4. Failures of collection.** Found on 2026-10-09 while verifying the re-score.
+None of them was looked for, and together they are larger than the score defects
+of category 1.
+
+- `wallets_full.txt` holds **143** addresses; `yaaf_payloads/` holds **722**
+  files. Neither the six-hourly round nor `refresh_all.sh` collects anything
+  outside the wallet list, so **579 payloads belong to addresses that are never
+  re-collected** — while being re-scored four times a day until P1 landed. The
+  served population is largely built on payloads nobody maintains.
+- The six-hourly writer is `run_observatory.sh`, which appears in no crontab, no
+  systemd timer and no PM2 app; it was found by the two strings it writes to
+  `logs/cron.log`. It collected only addresses with no payload yet — 26 of 139,
+  30 of 141, 25 of 143, 29 of 143 across the logged rounds — and then scored
+  everything: about 462 rows per round, four rounds a day. Roughly **1,850 scores
+  a day standing on roughly 110 collection events**, which is what filled
+  `round_history` with a single repeated value in 379 of 391 windows.
+- The profile classifier is **not stable for the same address between runs**. Two
+  addresses were labelled `directional` in one collector run while their payload
+  on disk read `unknown`. The probable cause is in the same output: `HTTP Error
+  429` on 9 of 57 addresses, so an incomplete collection yields a partial history
+  and a different label. The chain ends in a superseded score published as
+  current, which is D12.
+- `profile: unknown` is **not** "no data". 261 of 722 payloads carry it,
+  including addresses with Sharpe 7.04 and 10% drawdown. A third of the collected
+  population never enters scoring, because the emit filters on a label that
+  fails. This was previously recorded as wasted API budget; it is larger than
+  that.
+
+This category has no phase of its own and needs one. It sits upstream of
+everything Phase 2 will measure: a gate measured on a population assembled this
+way inherits the assembly's defects, and no statistic computed downstream can
+recover from it.
+
 ---
 
 ## Phase 0 — Retain the evidence
@@ -67,11 +100,41 @@ its history erased, having its own canonical measurement in that position is the
 sharpest contradiction in the system. It is also the one that costs the least to
 fix.
 
+### Corrected 2026-10-09
+
+Most of this phase was already done, on the night of the run, and this plan said
+otherwise without checking. The record:
+
+- `docs/evidence/gmx_v2/payloads_manifest.sha256`, 500 lines, and
+  `ic_test_gmx_v2_result.aggregate.json` were committed **in the same commit**,
+  `f22270c`, 2026-10-09T02:02:44Z. The precondition was met at the time.
+- `MEASUREMENT_INPUTS.md` in that commit carries the published/withheld split
+  with a SHA-256 per item, the scorer-commit correction recorded *as a
+  correction* rather than amended away, and the outcome-selected-universe
+  caveat.
+- Re-checked 2026-10-09: all 500 manifest entries present on disk; nothing in
+  the seal missing. The directory holds one extra file, `_summary.json`, which
+  the manifest does not cover.
+
+What is actually open in this phase is the second half of the precondition, the
+half the plan had been missing: **the producers are not under version control.**
+`observatory_commit` is `None` in the result because the collector was not in a
+repository when the run happened, and `/root/aiagentregistry-observatory` is
+still not a git repository. Until it is, the declared precondition cannot be
+satisfied by any future run, GMX or Hyperliquid. The privacy constraint does not
+conflict with this: the collector is code, the payloads are data. The code can be
+versioned publicly; the payloads stay out, as they already do.
+
+A second exposure remains, and the seal does not address it: the 500 payloads
+exist on one disk with no history. The manifest proves they have not changed; it
+does not stop them disappearing. If they go, the public label becomes *"measured
+2026-10-08; inputs not retained"* even with the manifest committed, because a
+manifest without the bodies detects tampering but does not reproduce anything.
+
 ### Steps
 
-1. **Inventory the VPS.** Do `yaaf_payloads_gmx/` (500 files) and
-   `ic_test_gmx_v2_result.json` exist, and do the payload count and trade count
-   match the 500 / 39,945 on record?
+1. ~~**Inventory the VPS.**~~ Done; see above. 500 payloads, 39,945 trades,
+   152 scored after the trade floors.
 
 2. **If they exist, hash them in place.** SHA-256 per payload, one manifest file,
    a root hash over the sorted manifest. Commit the manifest, the result JSON's
@@ -89,8 +152,23 @@ fix.
 4. **Amend the protocol.** New precondition, binding on every future run,
    including Hyperliquid:
 
-   > No measurement is canonical unless the hash manifest of its inputs is
-   > committed in the same commit as its result.
+   > No measurement is canonical unless the hash manifest of its inputs, and
+   > the commit of the collector and scorer that produced them, are committed
+   > in the same commit as its result.
+
+   This is the form `docs/evidence/gmx_v2/MEASUREMENT_INPUTS.md` already
+   declares, and it is stronger than the one this plan carried: it binds the
+   *producers* of the inputs, not only the inputs. The plan is corrected to it
+   rather than the record being softened to the plan.
+
+   The tool is `seal.py`, in this directory. `python3 seal.py --base <raiz>
+   <alvos>` writes `MANIFEST-sha256.txt` (one `sha256  caminho` line per input,
+   ordered by the path's bytes, nothing else, so it is reproducible byte for
+   byte) and `MANIFEST-root.txt` (the root plus file count and total bytes, kept
+   out of the root's own input). `--verify` re-hashes and reports changed,
+   missing and new inputs; it is what a stranger runs. It refuses to seal when a
+   named target is missing or yields nothing, because a seal that covers less
+   than was asked for comes out valid and misleads.
 
    This is the one amendment that the current failure argues for, and it is
    cheaper than everything it prevents.
@@ -175,6 +253,93 @@ same way.
 
 ## Phase 1 — Close the scorer
 
+### Corrected 2026-10-09, second time
+
+The amendment is in the file and not in the data. `/stats` on the live API
+reports `scorer_versions {"5.0.0-FORMAL": 363}` against
+`scorer_version_on_disk "5.1.0-FORMAL"`: **363 of 363 served YAAF records were
+produced by the pre-amendment scorer.** Every figure on scores.yelden.fund —
+the bands, the 313 EXPERIMENTAL, the 9 VERIFIED, the eligible count — comes
+from a scorer without D1+D2+D3 (9 components, W_SUM 0.96, attainable ceiling
+88.0208), without D10 (the CVaR floor, measured at +30 points), and with the
+Volume Axiom still active.
+
+This plan said the phase was "closed in substance". It was closed in the
+*file*. The file is not what produced the data, and the distinction is the
+whole phase: a scorer that has been corrected and not re-run publishes the old
+specification under the new version number.
+
+So the deliberate re-score is not a coverage chore. It is this phase's gate.
+Its three payloads stand: v5.1.0 scores, the EMA reset at the version boundary
+with `round_history` cleared and recorded as a dated event, and coverage over
+all 500 payloads. Until it runs, the correct public statement is the one the
+page now makes for itself: *the scorer was corrected and has not been re-run,
+so no count here reflects the current specification.*
+
+The lag is a field now, not a thing to remember: `scorer_version_lag` in
+`/stats`, rendered in the page's caption. It empties itself when the re-score
+runs.
+
+---
+
+### Closed 2026-10-09
+
+The re-score ran. 783 addresses served, 777 of them under `5.6.0-FORMAL`, with
+`RESCORE_20261009.md` carrying the reversibility hashes, the before-and-after
+table, and the stated reason for zeroing each of the three state fields.
+
+The phase's own indicator did not reach zero, and the closure says why rather
+than rounding it off. `scorer_version_lag` still lists `5.0.0-FORMAL` behind 6
+records. Those six are addresses the current specification **declines to score**,
+not addresses that were missed: their payload's profile regressed to `unknown`
+and the emit filters on profile. Two further records were withheld entirely,
+having no payload at all. The mechanism, the decision, and why the two get
+different treatment are in `D12_STALE_RECORDS.md`.
+
+What separates this closure from the one this section had to retract is a number.
+When the phase was called "closed in substance", **363 of 363** served records
+were pre-amendment and no figure on the page reflected the specification. Now
+**777 of 783** are current, the 6 exceptions are published as exceptions carrying
+`basis=stale` and a reason, and the 2 unverifiable ones are out of every count
+while staying readable one address at a time. This phase existed because *a
+scorer that has been corrected and not re-run publishes the old specification
+under the new version number*. That is resolved.
+
+**The consequence the phase did not anticipate.** Resetting `ema` to
+`EMA_INITIAL` leaves one observation per address, and one observation has a
+ceiling of `0.85 x 300 + 0.15 x 1000 = 405` against a contract threshold of 500.
+Eligibility fell from 4 to 0 **by arithmetic and not by performance**: no agent
+could have cleared the threshold in that round whatever it did. The observed
+maximum confirms the identity, `255 + 1.5 x 70.6 = 360.9`.
+
+Measured in `docs/evidence/sim_steady_state.py` over the 607 served YAAF
+records, holding CF and SF at the values in each record: **34 clear 500 once the
+EMA converges**, projected ceiling **715.16**, 4 to 8 collection events for the
+leaders. The threshold is reachable under this specification, which was the
+better of the two branches — had nothing reached it, what would have been in
+question was the threshold against the scale rather than the agents.
+
+Three figures in that measurement were first stated wrongly here, and the
+corrections belong to the record:
+
+- Counting `S_RAW >= 50` gives **86**, not 34. That form assumes `CF = SF = 1`;
+  the condition is `S_RAW x 10 x CF x SF >= 500`. The assumption overcounted by
+  52 agents, and 86 was quoted as a projection before being checked.
+- The mean `SISTEMA` **rises** (115.35 to 141.96) while **395 of 607 EMAs fall**.
+  The sign of a product's mean was inferred from the sign of one factor's mean,
+  which does not follow: the agents whose EMA rises carry higher `CF x SF`.
+- `CF x SF` is **not** concentrated low. One sampled agent showed 0.166 and an
+  argument was built on it; across the population 253 agents are above 0.4 and 73
+  above 0.8.
+
+Published alongside, so the zero cannot be read as a verdict on the agents:
+`eligible_at_ema_steady_state` in `/stats`, computed independently of the
+simulation and agreeing with it at 34, and the sentence the page now carries.
+
+---
+
+## Phase 1 — the amendment itself
+
 Apply `AMENDMENT_v5.0.2.md`, in the sequence it specifies, with the three
 discretionary decisions as declared there.
 
@@ -245,9 +410,26 @@ all. It is a classification:
    admitted and excluded. That difference is the headline, and it is the first
    number YAAF would have that is about accountability.
 
-3. **The threshold.** SISTEMA 400 — the VERIFIED boundary, the first band with a
-   stake floor that means anything — assigned by the Phase 1 scorer, declared
-   before the run.
+3. **The threshold, and it can no longer be 400 by inheritance.** This item
+   said SISTEMA 400 — the VERIFIED boundary, the first band with a stake
+   floor that means anything. On 2026-10-09 that number was found to be the
+   scorer's own `is_eligible` literal, which governs nothing: the contract's
+   `SCORE_THRESHOLD_ACTIVE` is **500**, and the gap between the two was
+   publishing 9 eligible agents where the contract accepts 4. The scorer field
+   has since been removed. So this phase must **re-declare** its threshold
+   before the run — 500, to match what governs registration, or 400 with a
+   written reason for measuring the gate at a boundary the contract does not
+   use. Inheriting 400 in silence would measure the gate against a number this
+   project has just taken out of circulation.
+
+3a. **A minimum date, which is new.** The re-score reset the EMA, so every
+   address now carries a single observation and the leaders are 4 to 8
+   collection events from convergence. Assigning bands today would assign them
+   from scores in transit, and the measurement would then describe the EMA's
+   transient rather than the gate. This phase has a floor in time now, and it is
+   a function of collection cadence rather than of anyone's schedule. The figure
+   to watch is `eligible_at_ema_steady_state` converging on `eligible` in
+   `/stats`.
 
 3b. **An outcome-blind universe.** Not the existing 500. The selection rule may
    use only information available before T1 ends — registry membership and an
@@ -306,7 +488,107 @@ have been edited.
 
 ---
 
+## Phase 3b — The credential surface on yelden.fund
+
+Found 2026-10-09 while restoring the onboard link that v16.5 removed. Taking the
+MT5 form down removed the page, not the machinery behind it.
+
+What was still live in theme v16.5/16.6:
+
+1. `POST /wp-json/yelden/v1/score-request` — open, `permission_callback =>
+   '__return_true'`, accepting `login`/`password`/`server`, writing the password
+   in plaintext to `wp_options`, and (via the queued action) forwarding it to
+   `api.yelden.fund` with `'sslverify' => false`. The form was gone; the
+   endpoint that the form posted to was not.
+2. `assets/push_agent_data_now.py`, `generate_agent_data.py`,
+   `fetch_myfxbook.py` — three operational scripts shipped inside the theme.
+   `wp-content/themes/…/assets/` is served as static files, so the source was
+   readable on request, including `WP_TOKEN = "yelden-2026-markowitz"`. A probe
+   distinguishes the real path (content returned) from a nonexistent sibling
+   (fetch error), so the files were being served.
+3. `POST /wp-json/yelden/v1/agent` — guarded by that same token, which falls
+   back to the literal in the theme source when the option is unset. This is the
+   write path for `yelden_agent_data`, i.e. every figure the `/agent` dashboard
+   displays. A public token on the write path of a live-figures page is the
+   tamper problem of Phase 3 in its simplest form, one layer above the database.
+4. `after_switch_theme` wrote the literal token into the database on activation,
+   so removing the default from the `define()` alone would have been undone by
+   the next deploy.
+
+Fixed in v16.7: both MT5 routes answer 410 and read nothing; the queued handler
+deletes an orphaned job instead of forwarding it; the `/agent` write requires a
+token with no code-side default (unset → 503) compared with `hash_equals`; the
+three scripts leave the theme and read the token from the environment; the admin
+health check verifies TLS; `?yelden_fix` is replaced by `?yelden_token`, which
+generates a random token and shows it once.
+
+**Deployed 2026-10-09.** Theme v16.7 is live; `POST /score-request` and
+`GET /score-result/*` answer 410 and read nothing, `POST /agent` answers 401.
+The four onboard links, the ten sections and the absence of live figures were
+verified on the live page.
+
+Not fixed by the deploy, and still owed:
+
+- **Rotate.** The stored `yelden_api_token` still holds the public literal. The
+  patch stops it being re-planted and stops it being readable from the theme; it
+  does not change the stored value.
+- **Clear the orphans.** `?yelden_clean=1` as admin deletes `yelden_job_%`,
+  `yelden_result_%`, `yelden_erro_%`. This is the SQL check that was pending,
+  available as a URL. Note the theme's own 24h cleanup never touched
+  `yelden_job_%` and its `option_id` condition was arbitrary, so orphans
+  accumulate whenever Action Scheduler is inactive.
+- **Provenance of `yelden_agent_data`.** Closing the write path says who may
+  write; it says nothing about where the numbers come from. They were last set
+  by a hand-written literal dict in `push_agent_data_now.py` (`s_raw` 70.05,
+  `ema` 519.61, `cf` 0.57, `score` 486). The dashboard reads at runtime and
+  hardcodes nothing, so the fix belongs upstream: the push should read
+  `facts.json`, which makes `/agent` the fourth consumer of the single source
+  and closes the last page carrying unlinked figures.
+
+**Effort:** the deploy is minutes; the provenance item rides with `facts.py`.
+
+---
+
 ## Phase 4 — Correct the claims
+
+### Found and fixed 2026-10-09: the eligibility count
+
+`scores.yelden.fund` published **9 eligible** where the contract accepts **4**.
+The API counted eligibility by reading `payload["is_eligible"]`, the scorer's
+field, whose threshold is 400 — the floor of the VERIFIED band. The contract
+requires `score >= SCORE_THRESHOLD_ACTIVE`, which is 500. The nine VERIFIED
+agents run 405.47 to 520.53; four clear 500, five do not.
+
+The comment directly above the filter asserted the contract's authority while
+the code used the scorer's number, which is what made the disagreement look
+settled. `facts.json` had already recorded it as `gate_threshold.agree = false`
+the same morning; what the field could not say was that the disagreement was
+already producing a wrong number on a public page.
+
+The page also stated, as a fact about the contract, *"`isEligible()` returns
+true at SISTEMA ≥ 400"* — inside a section titled "Not proven". The caveat was
+wrong about which threshold the contract uses.
+
+Fixed: eligibility is computed from `SCORE_THRESHOLD_ACTIVE` read out of the
+Solidity source, and the scorer's threshold is read out of the scorer source,
+so neither number is typed into the API. Both counts are published side by
+side (`eligible`, `eligible_by_scorer_field`, `eligible_margin`) while they
+differ, and the page states the margin and the error it used to publish. The
+scorer's `is_eligible` still needs removing, which is why the two counts are
+still being compared rather than one being deleted.
+
+### Still false on a public surface
+
+`yelden.fund` says the GMX V2 measurement was made *"under a protocol frozen
+before the run"*. `MEASUREMENT_INPUTS.md` says the protocol documents were
+first committed nine hours after the run and explicitly declines to claim a
+verifiable pre-registration. The evidence record is stricter than the page
+announcing it. This is the last claim on a public page that the project's own
+evidence contradicts.
+
+---
+
+## Phase 4 — the whitepaper
 
 The whitepaper's body is already about accountability — the epigraph is Taleb on
 skin in the game, the title is "Accountability", and four of the five problems in
@@ -460,6 +742,72 @@ already needed, failed-login noise in `btmp`, a prior compromised-wallet
 incident, and — as of today — a canonical measurement whose inputs cannot be
 located from here. This is the most probable cause of the whole thing failing,
 and it is the reason Phase 0 is Phase 0.
+
+---
+
+## The recurring error, recorded
+
+Kept because the only use of recording a mistake is that the next session does
+not repeat it. From 2026-10-09.
+
+**Seven of one kind: a name was trusted instead of the arithmetic.**
+
+- `load_payload(r[6])` was read as implying a path. The column holds JSON.
+- A cron at `0 3 * * *` against records stamped `00:04` was read as a three-hour
+  timezone bug. The machine runs in UTC; there was no offset, and the P1
+  declaration it would have retracted was correct.
+- `EMA_ALPHA = 0.85` was read as the smoothing weight. It is the decay; the
+  weight is 0.15. The rounds column then came out as `1` for all 34 agents, and a
+  uniform result across a population is a symptom, not a finding.
+- A tmux session whose 3d16h uptime coincided with the start of a cadence was
+  read as its cause. The session was an idle shell.
+- A search filtered on `yaaf|observatory` hid `run_observatory.sh`, because the
+  filter was chosen from the hypothesis instead of from the evidence.
+- `gate` and `assessable` were seen in a `5.6.0` payload and assumed present in
+  the `5.0.0` population. They were added later. The document that called that
+  measurement unrecoverable was right and was doubted without evidence.
+- `"is_eligible" not in src` was used to test for a removed field. The word
+  survives in a comment, so the note asserted a read failure that had not
+  happened — a null with the wrong cause, replacing a null with a different wrong
+  cause. The correct predicate was already written, the same day, in
+  `test_v560_weights_eligible.py`.
+
+In every one the check was a single query, and in two the right answer was
+already written in a neighbouring file.
+
+**Two of a worse kind.** A per-agent file was named as something that must not be
+committed, and then committed by the very `git add -A` offered in the same
+message — the warning was worthless because the command contradicted it. And a
+commit message described work that its patch had aborted without writing, so a
+public history carried a claim about fields that were still empty. Both were
+corrected by following commits rather than by `--amend`: a wrong message in the
+history is a smaller problem than a history rewritten to look clean.
+
+**Three of a third kind: a test that failed for its own reasons and nearly
+condemned working code.** A replica built with the wrong anchor string. A
+`for a in $A` loop written to bash's splitting rules inside zsh, which does not
+split. A listing checked at `limit=500` over a population of 783, where the
+record being sought sorts last. Each printed a verdict about the implementation
+that was false.
+
+**What caught five of the first seven was not judgement.** It was the habit of
+asking for the verification output instead of assuming the step worked: the wrong
+`facts.py` note surfaced only because a `facts.py | head -2` was in the block.
+The atomic-group discipline refused to write on three separate occasions when an
+anchor did not match, and each refusal was correct — including one that would
+have left a public endpoint raising `NameError`, which is the defect that
+discipline was adopted after causing once.
+
+The rules, in the order they were earned:
+
+1. A name is a hypothesis about arithmetic. Check the arithmetic.
+2. Choose a search scope from the evidence, not from the hypothesis.
+3. A uniform result across a population is a symptom until proven otherwise.
+4. A test must establish its own premise before it reports a verdict.
+5. Never offer `git add -A` in the same message as a warning about a file.
+6. Verify that a patch applied before writing the commit message that describes
+   it.
+7. Instrument a gate to record what it excludes **before** removing it.
 
 ---
 
