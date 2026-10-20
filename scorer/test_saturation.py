@@ -85,7 +85,7 @@ def main():
     print(f"   previsto pela aritmetica dos pesos: {prev:.4f}")
     print(f"   S_RAW devolvido pelo scorer:        {sa:.4f}")
     print(f"   SISTEMA {a['sistema']:.2f}   fee {a['monthly_fee_usdc']:.3f}   "
-          f"stage {a['stage']}   is_eligible {a['is_eligible']}")
+          f"stage {a['stage']}")
 
     if abs(sa - ESPERADO_PRE) <= TOL:
         estado = "PRE-EMENDA"
