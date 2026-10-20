@@ -15,7 +15,7 @@ Run 2026-10-08T05:00:08Z. 500 addresses declared, 500 payloads, 39,945 trades; 1
 | collectors/gmx.py (collector/) | 5f7c0e1d97b8e5d4183daee034d5ddb8e52749d5b45e90dac8a7b4c742995967 |
 | store/sqlite.py, pre-edit version from the .bak (collector/) | 8b75edd24f1287121c834d8134fa03633488c425eddcaaf7770d69d5536fbade |
 | store/sqlite.py, current (not published) | 17dfee0e7169187ca4902aed9e80c9f9eaa806f265585f8e8045a295791ba07a |
-| yaaf_score_v5_formal.py (scorer/ in this repo) | 4a399818f60969c03ac09e46f2416805ab625471e7c4c9be8aa9d32d6b687680 |
+| yaaf_score_v5_formal.py 5.0.0-FORMAL, as at commit b579e56 (scorer/ has since moved to 5.6.0-FORMAL) | 4a399818f60969c03ac09e46f2416805ab625471e7c4c9be8aa9d32d6b687680 |
 | ic_test_gmx_v2.py (docs/evidence/ in this repo) | f3d843fde721933251294fea019bc516b1eb75c34021d27f679035361fa584dd |
 | ic_test_gmx.py (docs/evidence/ in this repo) | e4880dc60a2f1acaa1c74b89208885a87f37748b9dbdf12d614b3dd3e9beb544 |
 | selection_check.py (analysis/) | 416b594887486dad3544e4a94d9187c931ffe23c88f4d3a274abad3f5febd16b |
@@ -44,6 +44,11 @@ Run 2026-10-08T05:00:08Z. 500 addresses declared, 500 payloads, 39,945 trades; 1
 - Withheld because they carry per-agent statistics: the per-agent table (observacoes, 152 rows), the full result JSON, wallets_gmx.txt, gmx_discover_raw.json. Their hashes are above; the canonical-JSON hash of the per-agent table is in the aggregate file.
 - To re-run ic_test_gmx_v2.py: it hardcodes OBS=/root/aiagentregistry-observatory and SCORER=/root/yaaf/scorer and reads payloads from OBS/yaaf_payloads_gmx. Mirror that layout rather than editing the script, because editing it changes its hash.
 - The payload directory holds **501** files against a manifest of 500. The extra one is `_summary.json`, the same 500 records concatenated by the collector: top-level list, each element carrying `agent_id`, `metrics`, `source`, `trades`, `ts`. It is not an input. `ic_test_gmx_v2.py` line 147 excludes it by rule, not by accident: `[f for f in sorted(PAYLOADS.glob("*.json")) if not f.stem.startswith("_")]`. Its mtime is 2026-10-08T04:50:19Z, ten minutes before the run at 05:00:08Z, so it was present and skipped by that filter, which is why the count is 500 and not 501. The manifest covers the 500 inputs and deliberately not this file. It is withheld for the same reason as the payloads: per-agent statistics, keyed by address. Its hash is in the table above, so an auditor can confirm the file they find is the file described here without being given it.
+
+## Update 2026-10-10
+
+- scorer/ in this repository advanced to 5.6.0-FORMAL on 2026-10-09. The run recorded here used 5.0.0-FORMAL. It is recovered with `git show b579e56a23f266dc18fa917c14c8e1278f863b54:scorer/yaaf_score_v5_formal.py`, whose sha256 is the one in the table above.
+- ic_test_gmx_v2.py imports the scorer from SCORER=/root/yaaf/scorer. To re-run it as measured, that directory must hold the 5.0.0 file, not the current one.
 
 ## Precondition for every future measurement
 
