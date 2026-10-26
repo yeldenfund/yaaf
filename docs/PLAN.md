@@ -747,6 +747,33 @@ and it is the reason Phase 0 is Phase 0.
 
 ## The recurring error, recorded
 
+### 2026-10-21 — fills, a tabela que eu quase apaguei
+
+Propus dropar `fills` (4.958.411 linhas, 1,31 GB, 97% do banco) com o
+argumento de que era residuo do coletor dYdX da primeira geracao.
+
+O que a leitura direta mostrou:
+  - dYdX sao 587 linhas de 4.957.824, de UM endereco, entre 2026-10-01 e
+    2026-10-05: um teste do `probe.sh`, nao um legado de 2023.
+  - `store/sqlite.py:138` grava a tabela; `feed_yaaf_hl_fast.py` e
+    `feed_yaaf_gmx.py` a alimentam na rodada de 6 horas via `save_fills()`.
+  - `metrics/r_multiples.py` converte fills em R-multiples. `fills` e a
+    entrada de S_RAW, nao um subproduto dele.
+  - `MAX(t)` estava 28 minutos no passado no momento em que propus o drop.
+
+O erro: li `MIN(t) = 2023-12-05` e o nome do arquivo `feed_yaaf.py` e
+construi tres paragrafos sobre os dois. Nao consultei `MAX(t)`, que custava
+a mesma consulta e dizia o contrario. Mesma classe do filtro
+`yaaf|observatory` que escondeu o `run_observatory.sh`: o filtro veio da
+hipotese, e por isso confirmou a hipotese.
+
+O que estava em jogo: dropar `fills` tornaria irreproduzivel-da-fonte todo
+score que o protocolo publica, violando a regra de canonicidade deste
+documento.
+
+Impedido por: "vamos antes entender quais sqlite o projeto usa".
+
+
 Kept because the only use of recording a mistake is that the next session does
 not repeat it. From 2026-10-09.
 
